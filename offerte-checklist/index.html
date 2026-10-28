@@ -1,0 +1,693 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>De offertecheck — Neto Agency</title>
+<meta name="description" content="Acht vragen. Zie hoeveel dagen per maand naar dossiers gaan die nooit getekend worden, in welk profiel je valt, en wat er als eerste zou moeten veranderen.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=IBM+Plex+Mono:wght@500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --ink:#0D0F12; --ink-2:#171A1F; --ink-3:#242830;
+  --lime:#C8F24C; --lime-deep:#8FAF25;
+  --paper:#F7F7F4; --white:#FFFFFF;
+  --rule-dark:#2A2E36; --muted:#8B919B; --flag:#E5533D;
+  --sans:"Space Grotesk","Helvetica Neue",Arial,sans-serif;
+  --mono:"IBM Plex Mono",ui-monospace,Menlo,monospace;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{-webkit-text-size-adjust:100%}
+body{font-family:var(--sans);background:var(--ink);color:var(--paper);
+  font-size:17px;line-height:1.5;min-height:100vh;-webkit-font-smoothing:antialiased}
+.wrap{max-width:600px;margin:0 auto;padding:0 20px 64px}
+
+.strip{position:sticky;top:0;z-index:20;background:var(--ink);
+  padding:18px 20px 14px;margin:0 -20px 32px;border-bottom:1px solid var(--rule-dark)}
+.strip-bar{display:flex;gap:3px}
+.strip-seg{flex:1;height:4px;background:var(--ink-3);border-radius:1px;transition:background .25s}
+.strip-seg.done{background:var(--lime)}
+.strip-seg.now{background:var(--lime);opacity:.45}
+.strip-meta{display:flex;justify-content:space-between;align-items:baseline;
+  margin-top:10px;font-size:12.5px;color:var(--muted)}
+.strip-meta b{color:var(--paper);font-weight:500}
+
+.intro{padding:56px 0 0}
+.intro-tag{font-size:13px;color:var(--lime);margin-bottom:24px}
+h1{font-size:clamp(30px,7.2vw,46px);line-height:1.06;letter-spacing:-.03em;
+  font-weight:700;margin-bottom:22px}
+h1 mark{background:var(--lime);color:var(--ink);padding:0 .1em;border-radius:2px}
+.intro p{color:#C4C8CE;margin-bottom:16px;max-width:46ch}
+.promise{background:var(--ink-2);border-left:3px solid var(--lime);
+  border-radius:0 5px 5px 0;padding:18px 20px;margin:26px 0 8px}
+.promise b{display:block;font-weight:600;margin-bottom:10px;font-size:16px}
+.promise li{list-style:none;font-size:15.5px;color:#C4C8CE;padding-left:18px;
+  position:relative;margin-bottom:7px;line-height:1.45}
+.promise li:last-child{margin-bottom:0}
+.promise li::before{content:"";position:absolute;left:0;top:.62em;
+  width:8px;height:2px;background:var(--lime);border-radius:1px}
+.tight{color:var(--muted);font-size:15px}
+.mid-tag{font-size:13px;color:var(--lime);margin-bottom:20px}
+.mid-n{font-family:var(--mono);font-weight:600;font-size:clamp(60px,20vw,110px);
+  line-height:.88;letter-spacing:-.05em;color:var(--lime);margin-bottom:6px}
+.mid-l{font-size:19px;font-weight:600;letter-spacing:-.02em;margin-bottom:22px;max-width:22ch}
+.mid p{color:#C4C8CE;margin-bottom:16px;max-width:46ch}
+.mid .rule{height:1px;background:var(--rule-dark);margin:28px 0 24px}
+
+.btn{display:inline-block;border:0;cursor:pointer;font-family:var(--sans);
+  font-size:17px;font-weight:600;background:var(--lime);color:var(--ink);
+  padding:16px 30px;border-radius:4px;letter-spacing:-.01em;transition:transform .12s}
+.btn:hover{transform:translateY(-1px)}
+.btn.wide{width:100%;text-align:center}
+.btn[disabled]{opacity:.4;cursor:not-allowed;transform:none}
+
+.q-num{font-size:13px;color:var(--muted);margin-bottom:10px}
+h2{font-size:clamp(23px,5.2vw,30px);line-height:1.16;letter-spacing:-.025em;
+  font-weight:700;margin-bottom:8px}
+.q-help{color:var(--muted);font-size:15px;margin-bottom:24px;max-width:44ch}
+
+.opts{display:flex;flex-direction:column;gap:9px}
+.opt{display:block;width:100%;text-align:left;cursor:pointer;
+  background:var(--white);color:var(--ink);border:2px solid var(--white);
+  border-radius:5px;padding:16px 18px;font-family:var(--sans);
+  font-size:16.5px;font-weight:500;line-height:1.35;letter-spacing:-.01em;
+  transition:border-color .12s, background .12s}
+.opt:hover{border-color:var(--lime-deep)}
+.opt.sel{border-color:var(--lime);background:var(--lime)}
+.opt small{display:block;font-weight:400;font-size:14px;color:#5C636D;margin-top:3px}
+.opt.sel small{color:#3A4213}
+
+.extra{display:none;margin-top:10px;background:var(--ink-2);
+  border:1px solid var(--rule-dark);border-radius:5px;padding:16px 18px}
+.extra.on{display:block}
+.extra label{display:block;font-size:14.5px;color:#C4C8CE;margin-bottom:8px}
+.extra .row{display:flex;gap:9px;align-items:center}
+.extra .row input{flex:1;min-width:0}
+.extra .unit{font-size:14.5px;color:var(--muted);white-space:nowrap}
+.extra .skip{display:block;margin-top:10px;font-size:13.5px;color:var(--muted)}
+.units{display:flex;gap:6px;margin-top:10px}
+.unit-b{flex:1;cursor:pointer;background:var(--ink-3);color:#B0B6BE;
+  border:1px solid var(--rule-dark);border-radius:5px;padding:10px 8px;
+  font-family:var(--sans);font-size:15px;font-weight:500}
+.unit-b.on{background:var(--lime);color:var(--ink);border-color:var(--lime);font-weight:600}
+
+.shift{margin-top:16px}
+.shift-row{display:flex;gap:0;flex-direction:column;margin-bottom:12px;
+  border:1px solid var(--rule-dark);border-radius:5px;overflow:hidden}
+.shift-a,.shift-b{padding:13px 16px;font-size:15.5px;line-height:1.45}
+.shift-a{background:#221518;color:#D9A9A2;border-left:3px solid var(--flag)}
+.shift-b{background:var(--ink-3);color:var(--paper);border-left:3px solid var(--lime)}
+.shift-k{display:block;font-size:12.5px;color:var(--muted);margin-bottom:4px}
+.shift-b .shift-k{color:var(--lime-deep)}
+
+input{width:100%;font-family:var(--sans);font-size:16.5px;background:var(--ink-3);
+  color:var(--paper);border:1px solid var(--rule-dark);border-radius:5px;padding:13px 15px}
+input:focus{outline:2px solid var(--lime);outline-offset:1px;border-color:transparent}
+input::placeholder{color:#5D636C}
+
+.nav{display:flex;align-items:center;gap:16px;margin-top:26px}
+.back{background:none;border:0;cursor:pointer;font-family:var(--sans);
+  font-size:15px;color:var(--muted);padding:8px 0}
+.back:hover{color:var(--paper)}
+
+.field{margin-bottom:16px}
+.hint{display:block;margin-top:7px;font-size:13.5px;color:var(--muted);line-height:1.45}
+label{display:block;font-size:14.5px;color:#C4C8CE;margin-bottom:7px}
+.consent{display:flex;gap:11px;align-items:flex-start;margin:20px 0 24px}
+.consent input{width:auto;margin-top:3px;accent-color:var(--lime)}
+.consent span{font-size:14px;color:var(--muted);line-height:1.45}
+
+.res-lead{font-size:15px;color:var(--muted);margin-bottom:6px}
+.profile{background:var(--lime);color:var(--ink);border-radius:6px;
+  padding:26px 24px;margin-bottom:16px}
+.profile .pl{font-size:13.5px;font-weight:600;margin-bottom:8px}
+.profile h2{font-size:clamp(25px,6vw,33px);margin-bottom:12px;letter-spacing:-.028em}
+.profile p{font-size:16px;color:#26300A;line-height:1.5}
+
+.figure{background:var(--white);color:var(--ink);border-radius:6px;
+  padding:26px 24px 24px;margin-bottom:14px}
+.figure-n{font-family:var(--mono);font-weight:600;font-size:56px;font-size:clamp(44px,12.5vw,68px);
+  line-height:.92;letter-spacing:-.045em}
+.figure-l{font-size:17px;font-weight:600;margin-top:8px;letter-spacing:-.015em}
+.figure-s{font-size:14.5px;color:#5C636D;margin-top:9px;line-height:1.45}
+.plan{margin:20px 0 4px}
+.plan-row{display:flex;flex-wrap:wrap;gap:5px;max-width:250px}
+.plan-d{width:44px;height:34px;border-radius:2px;background:#E8E8E1;flex:0 0 44px}
+.plan-d.lost{background:var(--flag)}
+.plan-key{display:flex;gap:16px;margin-top:11px;font-size:13px;color:#6C737E;flex-wrap:wrap}
+.plan-key i{display:inline-block;width:9px;height:9px;border-radius:2px;margin-right:6px}
+.plan-key .k1 i{background:var(--flag)}
+.plan-key .k2 i{background:#E8E8E1}
+
+h3{font-size:22px;font-weight:700;letter-spacing:-.02em;margin:38px 0 6px}
+.sec-help{color:var(--muted);font-size:15px;margin-bottom:18px;max-width:46ch}
+.cause{border-left:3px solid var(--flag);background:var(--ink-2);
+  border-radius:0 5px 5px 0;padding:17px 19px;margin-bottom:10px}
+.cause b{display:block;font-size:17px;font-weight:600;letter-spacing:-.015em;margin-bottom:5px}
+.cause p{font-size:15px;color:#B0B6BE;line-height:1.5}
+.cause .said{font-size:13.5px;color:var(--muted);margin-top:9px;
+  padding-top:9px;border-top:1px solid var(--rule-dark)}
+
+.how{background:var(--ink-2);border-radius:6px;padding:24px 22px;margin-top:16px}
+.how b{display:block;font-size:18px;font-weight:600;letter-spacing:-.02em;margin-bottom:12px}
+.how li{list-style:none;font-size:15.5px;color:#B0B6BE;line-height:1.5;
+  padding-left:20px;position:relative;margin-bottom:10px}
+.how li:last-child{margin-bottom:0}
+.how li::before{content:"";position:absolute;left:0;top:.6em;width:9px;height:2px;
+  background:var(--lime);border-radius:1px}
+.how li strong{color:var(--paper);font-weight:600}
+
+.closing{background:var(--white);color:var(--ink);border-radius:6px;
+  padding:26px 24px;margin-top:34px}
+.closing h4{font-size:20px;font-weight:700;letter-spacing:-.02em;margin-bottom:10px}
+.closing p{font-size:15.5px;color:#3D444E;margin-bottom:14px}
+.closing p strong{color:var(--ink);font-weight:600}
+.closing a{display:inline-block;background:var(--ink);color:var(--paper);
+  text-decoration:none;font-weight:600;font-size:16px;padding:14px 26px;border-radius:4px}
+.closing .fine{font-size:13.5px;color:#6C737E;margin:16px 0 0}
+.closing .inl{color:var(--ink);font-weight:600;text-decoration:underline;text-underline-offset:2px}
+.closing .callout{background:#F1F1EC;border-radius:5px;padding:16px 18px;margin-top:4px}
+.closing .callout b{display:block;font-size:14px;font-weight:600;color:var(--ink);margin-bottom:9px}
+.closing .callout ul{margin:0;padding:0;list-style:none}
+.closing .callout li{position:relative;padding-left:16px;font-size:14.5px;line-height:1.45;color:#3D444E;margin-bottom:6px}
+.closing .callout li:last-child{margin-bottom:0}
+.closing .callout li::before{content:"";position:absolute;left:0;top:.62em;width:8px;height:2px;background:var(--lime-deep);border-radius:1px}
+.sendstat{margin-top:20px;padding:13px 16px;border-radius:5px;font-size:14.5px;
+  line-height:1.45;background:var(--ink-2);color:var(--muted);border:1px solid var(--rule-dark)}
+.sendstat.ok{background:#16210E;color:var(--lime);border-color:#2E4014}
+.sendstat.err{background:#221518;color:#F0A79C;border-color:#4A2822}
+.foot{margin-top:44px;padding-top:20px;border-top:1px solid var(--rule-dark);
+  font-size:13px;color:#5D636C}
+
+.step{display:none}
+.step.on{display:block}
+:focus-visible{outline:2px solid var(--lime);outline-offset:2px}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+@media (max-width:400px){.plan-d{width:38px;height:28px;flex:0 0 38px}body{font-size:16px}}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <div class="strip" id="strip" style="display:none">
+    <div class="strip-bar" id="bar"></div>
+    <div class="strip-meta">
+      <span>Vraag <b id="qnow">1</b> van 8</span>
+      <span id="qphase">Je cijfers</span>
+    </div>
+  </div>
+
+  <section class="step on" id="intro">
+    <div class="intro">
+      <div class="intro-tag">Voor zonnepaneelinstallateurs die voor bedrijven werken</div>
+      <h1>Van je offertes van dit jaar — <mark>hoeveel zijn er getekend?</mark></h1>
+      <p>De meeste installateurs weten dat niet precies. En zolang niemand het naast elkaar legt, valt het ook niet op hoeveel tijd er weglekt.</p>
+
+      <div class="promise">
+        <b>Acht vragen. Daarna zie je meteen:</b>
+        <ul>
+          <li>Hoeveel dagen werk per maand naar dossiers gaan die niet getekend worden</li>
+          <li>Wat vijf procentpunt betere conversie je per jaar oplevert</li>
+          <li>In welk profiel je valt, en waarom dat knelt</li>
+          <li>Wat er in jouw geval als eerste zou moeten veranderen</li>
+        </ul>
+      </div>
+
+      <p class="tight" style="margin-top:18px">Ongeveer twee minuten. Gerekend met de cijfers die je zelf invult, niet met gemiddelden.</p>
+      <p style="margin-top:26px"><button class="btn" id="start">Begin de check</button></p>
+    </div>
+  </section>
+
+  <div id="qhost"></div>
+
+  <section class="step" id="mid">
+    <div style="padding-top:8px">
+      <div class="mid-tag">Halverwege — je cijfers zijn binnen</div>
+      <div class="mid-n" id="midn">0</div>
+      <div class="mid-l" id="midl">dagen werk per maand aan dossiers die niet getekend worden</div>
+      <div class="rule"></div>
+      <p id="midp"></p>
+      <p>In de volgende vier vragen kijken we waar dat vandaan komt. Daarna zie je in welk profiel je valt en wat er als eerste zou moeten veranderen.</p>
+      <p style="margin-top:26px"><button class="btn" id="midgo">Verder — nog vier vragen</button></p>
+    </div>
+  </section>
+
+  <section class="step" id="form">
+    <div class="q-num">Laatste stap</div>
+    <h2>Waar mogen we het resultaat naartoe sturen?</h2>
+    <p class="q-help">Je ziet het resultaat meteen op het scherm. We sturen het ook door zodat je het kan bewaren.</p>
+    <div class="field"><label for="fn">Voornaam</label><input id="fn" type="text" placeholder="Ray"></div>
+    <div class="field"><label for="bn">Bedrijfsnaam</label><input id="bn" type="text" placeholder="Naam van je installatiebedrijf"></div>
+    <div class="field"><label for="em">E-mailadres</label><input id="em" type="email" placeholder="jij@bedrijf.be"></div>
+    <div class="field"><label for="tel">Telefoon</label><input id="tel" type="tel" placeholder="04.."><span class="hint">We bellen je één keer om het resultaat door te nemen. Daarna hoor je niks meer als je dat niet wil.</span></div>
+    <div class="consent">
+      <input type="checkbox" id="ok">
+      <span>Neto Agency mag me dit resultaat mailen en er één keer op terugkomen. Ik kan me altijd afmelden.</span>
+    </div>
+    <button class="btn wide" id="calc" disabled>Toon mijn resultaat</button>
+    <div class="nav"><button class="back" id="backform">Terug</button></div>
+  </section>
+
+  <section class="step" id="result">
+    <div id="resbody"></div>
+    <div class="foot">Neto Agency &middot; Acquisitie voor zonnepaneelinstallateurs in Vlaanderen</div>
+  </section>
+
+</div>
+
+<script>
+const Q = [
+ {phase:"Je cijfers", key:"offertes",
+  q:"Hoeveel offertes maak je gemiddeld per maand?",
+  help:"Een schatting volstaat. Reken alleen projecten voor bedrijven mee, geen particuliere woningen.",
+  opts:[
+    {t:"1 tot 3",v:2},{t:"4 tot 8",v:6},{t:"9 tot 15",v:12},
+    {t:"15 of meer",v:18,extra:{lab:"Hoeveel ongeveer?",unit:"offertes per maand",ph:"20"}}]},
+
+ {phase:"Je cijfers", key:"uren",
+  q:"Hoeveel tijd zit er in \u00e9\u00e9n dossier?",
+  help:"Van eerste contact tot verstuurde offerte. Plaatsbezoek, technische inschatting en berekening meegerekend.",
+  opts:[
+    {t:"Minder dan een halve dag",v:4},{t:"Ongeveer een dag",v:8},{t:"Twee dagen",v:16},
+    {t:"Meer dan twee dagen",v:22,extra:{lab:"Hoeveel ongeveer?",ph:"3",units:[{lab:"dagen",mult:8},{lab:"uur",mult:1}]}}]},
+
+ {phase:"Je cijfers", key:"conv",
+  q:"Hoeveel procent van die offertes wordt getekend?",
+  help:"Weet je het niet precies, kies dat gerust. Dat antwoord zegt op zich al iets.",
+  opts:[
+    {t:"Meer dan 50%",v:.55,i:0},
+    {t:"Tussen 30 en 50%",v:.38,i:1},
+    {t:"Tussen 20 en 30%",v:.25,i:2},
+    {t:"Minder dan 20%",v:.15,i:3},
+    {t:"Ik weet het precies",v:.25,i:2,extra:{lab:"Welk percentage?",unit:"% wordt getekend",ph:"28",pct:true}},
+    {t:"Dat weet ik niet",s:"We rekenen dan met 25%",v:.25,i:2,unknown:true}]},
+
+ {phase:"Je cijfers", key:"waarde",
+  q:"Wat is een gemiddeld project bij jou waard?",
+  help:"De totale projectwaarde, niet je marge.",
+  opts:[
+    {t:"Minder dan \u20ac20.000",v:15000},
+    {t:"\u20ac20.000 tot \u20ac50.000",v:35000},
+    {t:"\u20ac50.000 tot \u20ac100.000",v:75000},
+    {t:"Meer dan \u20ac100.000",v:150000,extra:{lab:"Hoeveel gemiddeld?",unit:"euro per project",ph:"180000"}},
+    {t:"Dat wisselt sterk",s:"We rekenen dan met \u20ac60.000",v:60000,
+     extra:{lab:"Weet je het gemiddelde ongeveer?",unit:"euro per project",ph:"60000"}}]},
+
+ {phase:"Je proces", key:"snelheid",
+  q:"Hoe snel wordt een nieuwe aanvraag opgevolgd?",
+  help:"Niet hoe het zou moeten, maar hoe het in een drukke week gaat.",
+  opts:[
+    {t:"Binnen het uur"},{t:"Dezelfde dag"},{t:"Binnen een paar dagen"},
+    {t:"Wanneer er tijd voor is",extra:{lab:"Hoe lang duurt het dan meestal?",ph:"Een week, soms langer",text:true}}]},
+
+ {phase:"Je proces", key:"weten",
+  q:"Wat weet je over een aanvraag v\u00f3\u00f3r je in de wagen stapt?",
+  help:"Voor het plaatsbezoek, dus.",
+  opts:[
+    {t:"Budget, timing, wie beslist en of het dak geschikt is"},
+    {t:"Type dak en het verbruik"},
+    {t:"Ongeveer wat ze willen"},
+    {t:"Naam en adres, meer niet"},
+    {t:"Iets anders",i:2,extra:{lab:"Wat vraag je nu wel uit?",ph:"Bijvoorbeeld: verbruik en of ze al offertes hebben",text:true}}]},
+
+ {phase:"Je proces", key:"gedeeld",
+  q:"Liggen jouw aanvragen ook bij andere installateurs?",
+  help:"",
+  opts:[
+    {t:"Nee, ze komen meestal rechtstreeks bij ons"},{t:"Soms"},{t:"Vaak wel"},
+    {t:"Bijna altijd \u2014 ze vragen standaard meerdere offertes op"}]},
+
+ {phase:"Je proces", key:"bron",
+  q:"Waar komen je aanvragen nu vooral vandaan?",
+  help:"Kies wat het grootste deel oplevert.",
+  opts:[
+    {t:"Eigen advertenties op Google of Meta"},
+    {t:"Mond-tot-mond en tevreden klanten"},
+    {t:"Netwerk: aannemers, elektriciens, architecten"},
+    {t:"Vergelijkingssites zoals Solvari"},
+    {t:"Dat wisselt, moeilijk te zeggen"},
+    {t:"Iets anders",i:5,extra:{lab:"Waar komen ze dan vooral vandaan?",ph:"Bijvoorbeeld: via een vaste partner",text:true}}]}
+];
+
+const A={}, IDX={}, TXT={}, EXACT={}, PICKED={};
+const host=document.getElementById('qhost');
+
+Q.forEach(function(q,n){
+  var s=document.createElement('section');
+  s.className='step'; s.id='q'+n;
+  s.innerHTML =
+   '<div class="q-num">Vraag '+(n+1)+' van 8</div>'+
+   '<h2>'+q.q+'</h2>'+
+   (q.help?'<p class="q-help">'+q.help+'</p>':'<div style="height:14px"></div>')+
+   '<div class="opts">'+q.opts.map(function(o,i){
+      return '<button class="opt" data-i="'+i+'">'+o.t+(o.s?'<small>'+o.s+'</small>':'')+'</button>';}).join('')+'</div>'+
+   '<div class="extra" id="ex'+n+'"></div>'+
+   (n>0?'<div class="nav"><button class="back">Terug</button></div>':'');
+  host.appendChild(s);
+
+  var ex=s.querySelector('#ex'+n);
+  s.querySelectorAll('.opt').forEach(function(b){
+    b.onclick=function(){
+      var i=+b.dataset.i, o=q.opts[i];
+      A[q.key] = ('v' in o) ? o.v : i;
+      IDX[q.key] = ('i' in o) ? o.i : i;
+      if(q.key==='conv') A.convUnknown = !!o.unknown;
+      PICKED[q.key]=o.t;
+      s.querySelectorAll('.opt').forEach(function(x){x.classList.remove('sel');});
+      b.classList.add('sel');
+
+      if(o.extra){
+        ex.className='extra on';
+        ex.innerHTML =
+          '<label for="in'+n+'">'+o.extra.lab+'</label>'+
+          '<div class="row"><input id="in'+n+'" type="'+(o.extra.text?'text':'number')+
+          '" placeholder="'+o.extra.ph+'" inputmode="'+(o.extra.text?'text':'numeric')+'">'+
+          (o.extra.unit?'<span class="unit">'+o.extra.unit+'</span>':'')+'</div>'+
+          (o.extra.units?'<div class="units">'+o.extra.units.map(function(u,ui){
+             return '<button class="unit-b'+(ui===0?' on':'')+'" data-m="'+u.mult+'">'+u.lab+'</button>';
+           }).join('')+'</div>':'')+
+          '<button class="btn wide" style="margin-top:14px" id="go'+n+'">Verder</button>'+
+          '<span class="skip">Weet je het niet precies? Laat leeg en klik verder.</span>';
+        var inp=ex.querySelector('#in'+n);
+        var mult=1;
+        if(o.extra.units){
+          mult=o.extra.units[0].mult;
+          ex.querySelectorAll('.unit-b').forEach(function(ub){
+            ub.onclick=function(){
+              ex.querySelectorAll('.unit-b').forEach(function(x){x.classList.remove('on');});
+              ub.classList.add('on'); mult=+ub.dataset.m; inp.focus();
+            };
+          });
+        }
+        inp.focus();
+        var commit=function(){
+          var raw=inp.value.trim();
+          if(raw){
+            if(o.extra.text){ TXT[q.key]=raw; }
+            else {
+              var num=parseFloat(raw.replace(/[^0-9.,]/g,'').replace(',','.'));
+              if(!isNaN(num)&&num>0){
+                if(o.extra.pct){
+                  A[q.key]=Math.min(num,95)/100;
+                  IDX[q.key]= num>50?0 : (num>=30?1 : (num>=20?2:3));
+                  A.convUnknown=false;
+                } else { A[q.key]=num*mult; }
+                EXACT[q.key]=num*(o.extra.units?mult:1);
+              }
+            }
+          }
+          go(n+1);
+        };
+        ex.querySelector('#go'+n).onclick=commit;
+        inp.onkeydown=function(e){ if(e.key==='Enter'){ e.preventDefault(); commit(); } };
+      } else {
+        ex.className='extra'; ex.innerHTML='';
+        setTimeout(function(){go(n+1);},160);
+      }
+    };
+  });
+  var bk=s.querySelector('.back');
+  if(bk) bk.onclick=function(){go(n-1);};
+});
+
+var bar=document.getElementById('bar');
+for(var i=0;i<8;i++){var d=document.createElement('div');d.className='strip-seg';bar.appendChild(d);}
+
+function show(id){
+  document.querySelectorAll('.step').forEach(function(s){s.classList.remove('on');});
+  document.getElementById(id).classList.add('on');
+  window.scrollTo(0,0);
+}
+function paint(n){
+  Array.prototype.forEach.call(bar.children,function(d,i){
+    d.className='strip-seg'+(i<n?' done':(i===n?' now':''));});
+}
+var midShown=false;
+function showMid(){
+  midShown=true;
+  var d=Math.round(A.offertes*A.uren*(1-A.conv)/8);
+  document.getElementById('midn').textContent=d;
+  document.getElementById('midl').textContent = d===1
+    ? 'dag werk per maand aan dossiers die niet getekend worden'
+    : 'dagen werk per maand aan dossiers die niet getekend worden';
+  document.getElementById('midp').textContent =
+    'Gerekend met ' + A.offertes + ' offertes per maand, ' + A.uren +
+    ' uur per dossier en een conversie van ' + Math.round(A.conv*100) + '%. ' +
+    'Dat is tijd van jou of je verkoper die niet in een getekend project terechtkomt.';
+  paint(4);
+  document.getElementById('strip').style.display='block';
+  document.getElementById('qnow').textContent='4';
+  document.getElementById('qphase').textContent='Tussenstand';
+  show('mid');
+}
+function go(n){
+  if(n===4 && !midShown){ showMid(); return; }
+  if(n>=Q.length){ paint(8); document.getElementById('qphase').textContent='Bijna klaar'; show('form'); return; }
+  if(n<0) n=0;
+  paint(n);
+  document.getElementById('strip').style.display='block';
+  document.getElementById('qnow').textContent=n+1;
+  document.getElementById('qphase').textContent=Q[n].phase;
+  show('q'+n);
+}
+document.getElementById('start').onclick=function(){go(0);};
+document.getElementById('backform').onclick=function(){go(Q.length-1);};
+document.getElementById('midgo').onclick=function(){go(4);};
+
+var fn=document.getElementById('fn'), bn=document.getElementById('bn'),
+    em=document.getElementById('em'), tel=document.getElementById('tel'),
+    ok=document.getElementById('ok'), calc=document.getElementById('calc');
+function check(){calc.disabled=!(fn.value.trim()&&bn.value.trim()&&/\S+@\S+\.\S+/.test(em.value)&&tel.value.replace(/\D/g,'').length>=8&&ok.checked);}
+[fn,bn,em,tel].forEach(function(el){el.oninput=check;}); ok.onchange=check;
+
+var PROFILES = {
+  platform:{
+    naam:"Je koopt dossiers die ook bij anderen liggen",
+    p:"Het grootste deel van je aanvragen komt van vergelijkingssites. Die leveren volume, maar je betaalt voor een dossier waar op het moment dat je belt al vier anderen aan werken. Daardoor gaat het gesprek vanaf de eerste minuut over prijs, en niet over wat je installatie oplevert.",
+    fout:"De fout zit niet in je verkoop. Je verkoopt tegen drie offertes die je nooit te zien krijgt, en dat verlies je vaker dan je zou moeten \u2014 ook als je de betere installateur bent.",
+    how:["Wij wekken de aanvraag op <strong>voor jouw bedrijf alleen</strong>. Geen doorverkoop, geen gedeelde inbox.",
+         "We zetten campagnes op Google en Meta die bedrijven aanspreken met een eigen dak en een reden om nu te investeren.",
+         "Je betaalt geen prijs per aanvraag meer, maar een vast bedrag plus je eigen advertentiebudget. Wat eruit komt is van jou."],
+    shift:[["Je belt een bedrijf dat op dat moment ook door vier anderen gebeld wordt","Je belt een bedrijf dat alleen jouw aanvraag heeft gedaan"],
+           ["Het gesprek begint bij prijs","Het gesprek begint bij wat het project oplevert"],
+           ["Je betaalt per aanvraag, of die nu iets wordt of niet","Je betaalt voor het kanaal, en je ziet wat er per project uitkomt"]],
+    reason:"We rekenen samen door wat je nu per getekend project betaalt aan die vergelijkingssite, en wat hetzelfde budget in een eigen kanaal zou doen."},
+  netwerk:{
+    naam:"Je instroom hangt af van anderen",
+    p:"Je werk komt vooral uit mond-tot-mond en relaties. Dat levert goede klanten op en het heeft je gebracht waar je nu staat. Maar je kan niet beslissen dat er volgende maand drie extra binnenkomen.",
+    fout:"De fout is niet dat je op je netwerk leunt \u2014 dat werkt. De fout is dat het je enige kanaal is. Valt een relatie weg of wringt een concurrent zich ertussen, dan heb je geen tweede bron om op terug te vallen.",
+    how:["Mond-tot-mond blijft je beste bron. Wij komen daar niet aan en vervangen die niet.",
+         "Wat we ernaast zetten is een kanaal dat je <strong>zelf kan aanzetten en bijsturen</strong>. Wordt het stiller, dan is er een knop.",
+         "En we meten wat het oplevert, zodat je na een maand weet of het naast je netwerk kan bestaan of niet."],
+    shift:[["Je wacht af wie er belt","Je bepaalt zelf hoeveel aanvragen er binnenkomen"],
+           ["Een stille maand overkomt je","Een stille maand kan je bijsturen"],
+           ["Je weet niet of het volgend jaar nog zo loopt","Je hebt een tweede bron die niet van iemand anders afhangt"]],
+    reason:"We kijken samen wat een tweede kanaal in jouw regio realistisch oplevert, en wat het kost voordat het iets doet."},
+  volume:{
+    naam:"Je draait advertenties, maar er zit geen filter achter",
+    p:"Je haalt je aanvragen al zelf binnen. Dat is verder dan de meeste installateurs. Alleen komt alles in hetzelfde proces terecht: wie budget heeft en wie prijzen aan het inventariseren is.",
+    fout:"De fout zit tussen de advertentie en je agenda. Er wordt nergens uitgevraagd of een aanvraag de moeite waard is, dus die vraag komt pas boven nadat het plaatsbezoek al gebeurd is.",
+    how:["Wij zetten een <strong>kwalificatiestap tussen de advertentie en jouw agenda</strong>: dak, verbruik, budget, timing en wie beslist.",
+         "Wat daar niet doorkomt, komt niet op je planning. Je verliest geen dagen meer aan dossiers die weinig kans maken.",
+         "En we sturen de campagnes bij op wat effectief getekend wordt, niet op wat het meeste aanvragen oplevert."],
+    shift:[["Elke aanvraag krijgt dezelfde behandeling","Alleen wat door het filter komt, komt op je planning"],
+           ["Je ontdekt op het dak dat er geen budget is","Dat weet je voordat je in de wagen stapt"],
+           ["Campagnes worden bijgestuurd op kliks en aanvragen","Campagnes worden bijgestuurd op getekende projecten"]],
+    reason:"We nemen je laatste tien aanvragen door en bepalen welke je op basis van je eigen criteria niet had moeten opvolgen."},
+  blind:{
+    naam:"Je hebt geen zicht op wat werkt",
+    p:"Je weet niet goed waar je aanvragen vandaan komen of wat er van je offertes terechtkomt. Zolang de agenda vol zit is dat geen acuut probleem, maar het betekent wel dat er niks te sturen valt.",
+    fout:"De fout is niet je marketing, het is dat je blind vaart. Je kan niet kiezen waar je tijd en geld naartoe gaan, want je weet niet welk kanaal je beste projecten oplevert. Wordt het volgend jaar minder, dan is er geen knop om aan te draaien.",
+    how:["We beginnen met <strong>meten</strong>: bij elke aanvraag leggen we vast waar hij vandaan komt en wat ervan getekend wordt.",
+         "Binnen een maand weet je welk kanaal je beste projecten oplevert en waar je tijd en geld naartoe moet.",
+         "Pas als dat er staat, heeft het zin om meer verkeer te sturen. Anders vergroot je alleen wat je niet ziet."],
+    shift:[["Je weet niet waar je projecten vandaan komen","Bij elke aanvraag staat de bron erbij"],
+           ["Je gokt waar je budget naartoe moet","Je ziet welk kanaal per euro het meeste oplevert"],
+           ["Een stille maand overvalt je","Je ziet het aankomen en kan bijsturen"]],
+    reason:"In dat gesprek zetten we je cijfers van de laatste drie maanden op een rij, zodat je voor het eerst ziet waar je werk echt vandaan komt."},
+  ingericht:{
+    naam:"Je proces staat, hier valt weinig te winnen",
+    p:"Je tekent meer dan de helft van je offertes en je proces zit goed in elkaar. Dat is beter dan de meeste installateurs die we spreken.",
+    fout:"We gaan hier niet doen alsof er een probleem is. Bij jouw conversie is het knelpunt geen kwaliteit maar volume: je zet om wat binnenkomt, er komt alleen niet genoeg binnen om harder te groeien.",
+    how:["Bij jouw conversie is meer volume <strong>w\u00e9l</strong> zinvol, want je zet aanvragen effectief om.",
+         "Dat is een ander gesprek dan we meestal voeren, en misschien heb je ons daar niet eens voor nodig.",
+         "Als je toch wil kijken wat een extra kanaal zou opleveren, zeggen we het eerlijk als het niks toevoegt."],
+    shift:[["Je capaciteit is de grens, niet je conversie","Meer aanvragen vertalen zich direct in meer projecten"]],
+    reason:"E\u00e9n gesprek om te bekijken of een extra kanaal in jouw situatie iets toevoegt. Zo niet, dan zeggen we dat."},
+  anders:{
+    naam:"Je aanvragen komen uit een eigen kanaal",
+    p:"Je haalt je aanvragen ergens anders vandaan dan de meeste installateurs. Wat dat kanaal precies is, bepaalt wat er zinvol is om aan te passen \u2014 dat nemen we mee in het gesprek.",
+    fout:"Wat de bron ook is, het patroon in je antwoorden is hetzelfde: er wordt niet uitgevraagd of een aanvraag de moeite waard is voordat je er tijd in steekt.",
+    how:["We beginnen bij wat je nu al hebt en kijken waar de tijd weglekt.",
+         "Daarna zetten we een <strong>kwalificatiestap</strong> voor de aanvraag bij je ploeg terechtkomt.",
+         "En we meten wat er van elk kanaal getekend wordt, zodat je weet waar je op moet inzetten."],
+    shift:[["Elke aanvraag krijgt dezelfde behandeling","Alleen wat door het filter komt, komt op je planning"],
+           ["Je weet niet wat elk kanaal oplevert","Je ziet per bron wat er getekend wordt"]],
+    reason:"We nemen je huidige kanaal door en bepalen wat er als eerste zou moeten veranderen."}
+};
+
+var CAUSES={
+ snelheid:{min:2,
+  b:"Aanvragen blijven te lang liggen",
+  p:"Bij projecten voor bedrijven belt de installateur die er als eerste bij is meestal het gesprek naar zich toe. Wie een paar dagen later belt, praat over de offerte die er al ligt.",
+  said:["","","Je gaf aan: binnen een paar dagen","Je gaf aan: wanneer er tijd voor is"]},
+ weten:{min:2,
+  b:"Je weet pas op het dak of een dossier iets waard is",
+  p:"Budget, timing en beslissingsbevoegdheid komen nu pas boven nadat het plaatsbezoek al gebeurd is. Dat is precies waar de uren in gaan zitten die achteraf niets opleveren.",
+  said:["","","Je gaf aan: ongeveer wat ze willen","Je gaf aan: naam en adres, meer niet"]},
+ gedeeld:{min:2,
+  b:"Je offreert op dossiers waar anderen ook op zitten",
+  p:"Zodra er drie of vier offertes op tafel liggen, gaat het gesprek over prijs. Je levert hetzelfde werk voor een lagere marge, of je verliest het helemaal \u2014 en dat heeft weinig met je installatie te maken.",
+  said:["","","Je gaf aan: vaak wel","Je gaf aan: bijna altijd"]}
+};
+
+function pickProfile(causes){
+  var b=IDX.bron, c=IDX.conv;
+  if(c===0 && causes.length<=1) return 'ingericht';
+  if(b===5) return 'anders';
+  if(A.convUnknown || b===4) return 'blind';
+  if(b===3) return 'platform';
+  if(b===0) return (c>=2) ? 'volume' : 'ingericht';
+  return 'netwerk';
+}
+
+calc.onclick=function(){
+  var off=A.offertes, uren=A.uren, conv=A.conv, waarde=A.waarde;
+  var dagen=Math.round(off*uren*(1-conv)/8);
+  var overvol=dagen>20;
+  var extraProj=Math.max(1,Math.round(off*12*0.05));
+  var extraOmzet=extraProj*waarde;
+  var euro=function(n){return '\u20ac'+Math.round(n).toLocaleString('nl-BE');};
+  var causes=Object.keys(CAUSES).filter(function(k){return IDX[k]>=CAUSES[k].min;});
+  var prof=PROFILES[pickProfile(causes)];
+  var blocks=function(l,t){var h='';for(var i=0;i<t;i++)h+='<div class="plan-d'+(i<l?' lost':'')+'"></div>';return h;};
+
+  var html=
+   '<div class="res-lead">'+bn.value.trim()+'</div>'+
+   '<h1 style="margin-bottom:24px">Dit is wat er volgens je eigen cijfers uitkomt.</h1>'+
+
+   '<div class="profile"><div class="pl">Jouw profiel</div>'+
+   '<h2>'+prof.naam+'</h2><p>'+prof.p+'</p></div>'+
+
+   '<div class="figure"><div class="figure-n">'+dagen+'</div>'+
+   '<div class="figure-l">dagen werk per maand aan dossiers die niet getekend worden</div>'+
+   '<div class="plan"><div class="plan-row">'+blocks(Math.min(dagen,20),20)+'</div>'+
+   '<div class="plan-key"><span class="k1"><i></i>Naar dossiers die niks worden</span>'+
+   '<span class="k2"><i></i>De rest van de maand</span></div></div>'+
+   '<div class="figure-s">Gerekend met '+off+' offertes per maand, '+uren+
+   ' uur per dossier en een conversie van '+Math.round(conv*100)+'%.'+
+   (A.convUnknown?' Je gaf aan je conversie niet te kennen, dus we rekenden met 25%.':'')+
+   (overvol?' Dat is meer dan \u00e9\u00e9n persoon in een maand aankan, dus die tijd is verdeeld over jou en je verkopers.':'')+
+   '</div></div>'+
+
+   '<div class="figure"><div class="figure-n">'+extraProj+'</div>'+
+   '<div class="figure-l">extra getekende projecten per jaar bij vijf procentpunt betere conversie</div>'+
+   '<div class="figure-s">Dus van '+Math.round(conv*100)+'% naar '+(Math.round(conv*100)+5)+
+   '%. Bij de projectwaarde die je opgaf komt dat neer op ongeveer '+euro(extraOmzet)+
+   ' extra omzet per jaar. Geen belofte \u2014 gewoon wat je eigen cijfers zeggen bij vijf procentpunt.</div></div>'+
+
+   '<h3>Waar de fout zit</h3>'+
+   '<p class="sec-help">'+prof.fout+'</p>'+
+
+   '<h3>Wat wij zouden veranderen</h3>'+
+   '<p class="sec-help">Concreet, en in deze volgorde.</p>'+
+   '<div class="how"><b>'+prof.naam+'</b><ul>'+
+   prof.how.map(function(x){return '<li>'+x+'</li>';}).join('')+'</ul></div>'+
+
+   '<div class="shift">'+prof.shift.map(function(sh){
+      return '<div class="shift-row">'+
+        '<div class="shift-a"><span class="shift-k">Nu</span>'+sh[0]+'</div>'+
+        '<div class="shift-b"><span class="shift-k">Wordt</span>'+sh[1]+'</div></div>';
+    }).join('')+'</div>';
+
+  if(causes.length){
+    html+='<h3>Wat er daarnaast weglekt</h3>'+
+          '<p class="sec-help">Dit komt uit wat je zelf hebt ingevuld.</p>';
+    causes.forEach(function(k){
+      var c=CAUSES[k];
+      html+='<div class="cause"><b>'+c.b+'</b><p>'+c.p+'</p>'+
+            '<div class="said">'+c.said[IDX[k]]+'</div></div>';
+    });
+  }
+
+  html+='<div class="closing"><h4>'+dagen+' dagen per maand \u2014 wat doe je ermee?</h4>'+
+    '<p>Deze berekening komt uit acht vragen. Ze klopt met wat je hebt ingevuld, maar ze is nog niet jouw situatie.</p>'+
+    '<p><strong>Daarom bellen we je deze week even op.</strong> '+prof.reason+' Duurt een kwartier.</p>'+
+    '<div class="callout"><b>Wat je van dat telefoontje mag verwachten</b>'+
+    '<ul><li>We nemen jouw cijfers door, niet onze presentatie.</li>'+
+    '<li>Je hoort meteen of er iets te winnen valt of niet.</li>'+
+    '<li>Past het niet bij jouw bedrijf, dan zeggen we dat in datzelfde gesprek.</li></ul></div>'+
+    '<p class="fine">Liever meteen een moment vastleggen? Dat kan ook: <a class="inl" href="https://link.apexagency.io/widget/booking/rqt3R8EzJPimIDCO6yyf" target="_blank" rel="noopener">kies zelf een tijdstip</a>.</p></div>';
+
+  document.getElementById('resbody').innerHTML=html;
+  document.getElementById('strip').style.display='none';
+  show('result');
+
+  /* ---- verzenden naar de inbox ---- */
+  var eigen = Object.keys(EXACT).map(function(k){return k+': '+EXACT[k];}).join(' | ');
+  var toel  = Object.keys(TXT).map(function(k){return k+': '+TXT[k];}).join(' | ');
+
+  var payload = {
+    access_key: "abb08bec-2dfb-46a1-b14d-20f64273443c",
+    subject: "Offertecheck \u2014 " + bn.value.trim() + " \u2014 " + dagen + " dagen \u2014 " + prof.naam,
+    from_name: "Offertecheck",
+    botcheck: "",
+
+    "Voornaam": fn.value.trim(),
+    "Bedrijf":  bn.value.trim(),
+    "E-mail":   em.value.trim(),
+    "Telefoon": tel.value.trim(),
+
+    "Profiel": prof.naam,
+    "Dagen per maand verloren": dagen,
+    "Extra projecten per jaar (5pp)": extraProj,
+    "Extra omzet per jaar (5pp)": euro(extraOmzet),
+
+    "1. Offertes per maand": PICKED.offertes,
+    "2. Tijd per dossier":   PICKED.uren,
+    "3. Conversie":          PICKED.conv,
+    "4. Projectwaarde":      PICKED.waarde,
+    "5. Opvolgsnelheid":     PICKED.snelheid,
+    "6. Weet vooraf":        PICKED.weten,
+    "7. Aanvragen gedeeld":  PICKED.gedeeld,
+    "8. Bron aanvragen":     PICKED.bron,
+
+    "Zelf ingevulde cijfers": eigen || "\u2014",
+    "Eigen toelichting":      toel  || "\u2014",
+    "Signalen":               causes.length ? causes.join(', ') : "geen",
+    "Ingevuld op":            new Date().toLocaleString('nl-BE')
+  };
+
+  var st = document.createElement('div');
+  st.className = 'sendstat';
+  st.textContent = 'Verzenden...';
+  document.getElementById('resbody').appendChild(st);
+
+  fetch("https://api.web3forms.com/submit", {
+    method: "POST",
+    headers: {"Content-Type":"application/json", "Accept":"application/json"},
+    body: JSON.stringify(payload)
+  })
+  .then(function(r){ return r.json().then(function(j){ return {status:r.status, body:j}; }); })
+  .then(function(res){
+    if(res.body && res.body.success){
+      st.className = 'sendstat ok';
+      st.textContent = 'Verzonden \u2014 je resultaat is onderweg naar je mailbox.';
+    } else {
+      st.className = 'sendstat err';
+      st.textContent = 'Verzenden mislukt. Status ' + res.status + ' \u2014 ' +
+        ((res.body && (res.body.message || res.body.error)) || 'geen melding van de server');
+      console.error('WEB3FORMS ANTWOORD', res);
+    }
+  })
+  .catch(function(e){
+    st.className = 'sendstat err';
+    st.textContent = 'Verzenden mislukt: ' + e.message +
+      ' (netwerk, blokkade of het bestand draait niet op een echte URL)';
+    console.error('WEB3FORMS FOUT', e);
+  });
+};
+</script>
+</body>
+</html>
