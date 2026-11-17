@@ -1,0 +1,745 @@
+<!doctype html>
+<html lang="nl-BE">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Ray Startbijbel</title>
+<style>
+  :root{
+    --blue:#0071E3; --blue-soft:#EAF3FD; --ink:#1D1D1F; --muted:#6E6E73;
+    --line:#E5E5EA; --bg:#FFFFFF; --card:#FAFAFC; --ok:#1E8E3E; --warn:#B3261E; --warn-soft:#FDECEA;
+  }
+  *{box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  body{margin:0;background:var(--bg);color:var(--ink);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;font-size:16px;line-height:1.55}
+  .wrap{max-width:820px;margin:0 auto;padding:0 16px 80px}
+  header.top{padding:40px 0 24px;border-bottom:1px solid var(--line)}
+  .kicker{color:var(--blue);font-weight:700;font-size:13px;letter-spacing:.08em;text-transform:uppercase}
+  h1{font-size:32px;line-height:1.15;margin:8px 0 10px}
+  h2{font-size:24px;margin:0 0 6px}
+  h3{font-size:18px;margin:22px 0 8px}
+  p{margin:8px 0}
+  .lead{color:var(--muted);font-size:17px}
+  a{color:var(--blue)}
+  .progress{position:sticky;top:0;z-index:10;background:rgba(255,255,255,.96);backdrop-filter:blur(6px);border-bottom:1px solid var(--line);padding:10px 0}
+  .progress .bar{height:8px;background:var(--line);border-radius:99px;overflow:hidden}
+  .progress .fill{height:100%;width:0;background:var(--blue);transition:width .3s}
+  .progress .txt{font-size:13px;color:var(--muted);margin-top:4px;display:flex;justify-content:space-between;gap:8px}
+  nav.toc{margin:24px 0;padding:16px;background:var(--card);border:1px solid var(--line);border-radius:14px}
+  nav.toc ol{margin:6px 0 0;padding-left:22px;columns:2;column-gap:28px}
+  nav.toc li{margin:3px 0;break-inside:avoid}
+  @media (max-width:560px){nav.toc ol{columns:1}}
+  section{padding:32px 0;border-bottom:1px solid var(--line)}
+  .letter{display:inline-flex;align-items:center;justify-content:center;width:30px;height:30px;border-radius:8px;background:var(--blue);color:#fff;font-weight:700;font-size:15px;margin-right:8px;vertical-align:2px}
+  .why{background:var(--blue-soft);border-left:4px solid var(--blue);padding:10px 14px;border-radius:8px;margin:12px 0}
+  .warn{background:var(--warn-soft);border-left:4px solid var(--warn);padding:10px 14px;border-radius:8px;margin:12px 0}
+  .chain{display:flex;flex-wrap:wrap;align-items:center;gap:6px;margin:14px 0}
+  .chain span{background:var(--blue);color:#fff;padding:8px 12px;border-radius:10px;font-weight:600;font-size:14px}
+  .chain i{font-style:normal;color:var(--muted);font-weight:700}
+  ul.checks{list-style:none;padding:0;margin:10px 0}
+  ul.checks li{display:flex;gap:10px;align-items:flex-start;padding:9px 10px;border:1px solid var(--line);border-radius:10px;margin:6px 0;background:#fff}
+  ul.checks li.done{background:#F3F9F4;border-color:#CDE6D3}
+  ul.checks li.done .t{color:var(--muted);text-decoration:line-through}
+  ul.checks input{width:20px;height:20px;margin:2px 0 0;flex:0 0 auto;accent-color:var(--blue);cursor:pointer}
+  ul.checks label{cursor:pointer;flex:1}
+  .klaar{display:block;font-size:13.5px;color:var(--muted);margin-top:2px}
+  .klaar b{color:var(--ok)}
+  .day{border:1px solid var(--line);border-radius:14px;padding:6px 14px 10px;margin:14px 0;background:var(--card)}
+  .day h3{margin:10px 0 4px}
+  .day .when{font-size:13px;color:var(--muted)}
+  .box{position:relative;background:#F5F5F7;border:1px solid var(--line);border-radius:12px;padding:14px;margin:10px 0}
+  .box pre{margin:0;white-space:pre-wrap;word-wrap:break-word;font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:13.5px;line-height:1.5;max-height:380px;overflow:auto}
+  .box .label{font-weight:700;font-size:14px;margin-bottom:8px;padding-right:90px}
+  .copy{position:absolute;top:10px;right:10px;background:var(--blue);color:#fff;border:0;border-radius:8px;padding:6px 12px;font-size:13px;font-weight:600;cursor:pointer}
+  .copy.ok{background:var(--ok)}
+  table{width:100%;border-collapse:collapse;font-size:14px;margin:10px 0}
+  th,td{border:1px solid var(--line);padding:8px;text-align:left;vertical-align:top}
+  th{background:var(--card)}
+  .tablewrap{overflow-x:auto}
+  .info{display:inline-flex;align-items:center;justify-content:center;width:18px;height:18px;border-radius:50%;background:var(--blue-soft);color:var(--blue);font-size:12px;font-weight:700;font-style:normal;cursor:help;position:relative;vertical-align:1px;margin-left:3px}
+  .info:hover::after,.info:focus::after{content:attr(data-tip);position:absolute;bottom:130%;left:50%;transform:translateX(-50%);width:260px;max-width:78vw;background:var(--ink);color:#fff;padding:9px 11px;border-radius:9px;font-size:13px;font-weight:400;line-height:1.45;z-index:20;white-space:normal;text-align:left}
+  .video{border:1px solid var(--line);border-radius:14px;padding:14px;margin:12px 0;background:#fff}
+  .video .num{color:var(--blue);font-weight:700;font-size:13px}
+  .video h3{margin:4px 0 2px;font-size:17px}
+  .video .by{color:var(--muted);font-size:14px}
+  .video ol{margin:6px 0 0;padding-left:20px}
+  .tag{display:inline-block;font-size:12px;font-weight:600;padding:2px 8px;border-radius:99px;background:var(--blue-soft);color:var(--blue);margin-left:6px}
+  .placeholder{border:2px dashed var(--blue);border-radius:14px;padding:28px 18px;text-align:center;background:var(--blue-soft)}
+  .placeholder b{font-size:18px}
+  details{border:1px solid var(--line);border-radius:12px;padding:10px 14px;margin:8px 0;background:#fff}
+  summary{font-weight:600;cursor:pointer}
+  .reset{background:none;border:1px solid var(--line);border-radius:8px;padding:6px 12px;color:var(--muted);cursor:pointer;font-size:13px}
+  footer{padding:30px 0;color:var(--muted);font-size:14px}
+  @media (max-width:560px){h1{font-size:26px}h2{font-size:21px}}
+</style>
+</head>
+<body>
+
+<div class="progress"><div class="wrap" style="padding-bottom:0">
+  <div class="bar"><div class="fill" id="fill"></div></div>
+  <div class="txt"><span id="ptxt">0 van 0 afgevinkt</span><button class="reset" id="reset" type="button">Alles leegmaken</button></div>
+</div></div>
+
+<div class="wrap">
+
+<header class="top">
+  <div class="kicker">NETO Agency · Startbijbel · 17/11</div>
+  <h1>Ray, dit is je plan. Vandaag bel je al.</h1>
+  <p class="lead"><b>Regel 1: eerst bellen, dan leren.</b> Je wacht niet tot je alles kent. Je belt vanaf dag 1 en leert ondertussen. Begin bij "Vandaag starten" hieronder, de rest lees je stukje per stukje. Vink af wat klaar is. Je vinkjes blijven bewaard in deze browser.</p>
+  <p class="lead">Vragen? Stel ze in de groep <b>RAY CONTENT</b>. Het AS Media team staat achter je.</p>
+</header>
+
+<section id="start" style="border:2px solid #0071E3">
+  <h2>Vandaag starten (in 1 uur)</h2>
+  <p>Geen setup eerst, geen video's eerst. Gewoon bellen.</p>
+  <ul class="checks">
+    <li><input type="checkbox" id="s1"><label for="s1"><span class="t">Je oude leads bij elkaar zetten: iedereen die je al ooit gesproken, gebeld of gecontacteerd hebt.</span><span class="klaar"><b>Klaar als:</b> ze in een Google Sheet staan (kolommen uit F, 10 minuten).</span></label></li>
+    <li><input type="checkbox" id="s2"><label for="s2"><span class="t">Je oude leads vandaag nog allemaal bellen met het nieuwe aanbod: "ik maak gratis een nieuwe website voor je".</span><span class="klaar"><b>Klaar als:</b> elke oude lead een resultaat heeft in je Sheet.</span></label></li>
+    <li><input type="checkbox" id="s3"><label for="s3"><span class="t">Nieuwe leads zoeken tot je er 100 hebt (zie E) en beginnen bellen.</span><span class="klaar"><b>Klaar als:</b> je lijst elke dag 100 nieuwe nummers heeft om te bellen.</span></label></li>
+    <li><input type="checkbox" id="s4"><label for="s4"><span class="t">Zegt iemand ja? Dan bouw je die avond zijn site met Claude (C + D).</span><span class="klaar"><b>Klaar als:</b> de demo-link verstuurd is.</span></label></li>
+    <li><input type="checkbox" id="s5"><label for="s5"><span class="t">Avondrapport in RAY CONTENT.</span><span class="klaar"><b>Klaar als:</b> je cijfers in de groep staan.</span></label></li>
+  </ul>
+  <div class="why"><b>Leren doe je ernaast:</b> de video's (J) kijk je 's avonds of tussen je shiften. Bellen gaat altijd voor.</div>
+</section>
+
+<nav class="toc">
+  <b>Inhoud</b>
+  <ol type="A">
+    <li><a href="#a">Het plan in 1 minuut</a></li>
+    <li><a href="#b">Week 1, dag per dag</a></li>
+    <li><a href="#c">Setup: Claude</a></li>
+    <li><a href="#d">Website bouwen + online zetten</a></li>
+    <li><a href="#e">Leads vinden</a></li>
+    <li><a href="#f">Je CRM-lijst</a></li>
+    <li><a href="#g">Cold call gids</a></li>
+    <li><a href="#h">Na de gratis website</a></li>
+    <li><a href="#i">Content</a></li>
+    <li><a href="#j">Leren: video's</a></li>
+    <li><a href="#k">Vaste afspraken</a></li>
+    <li><a href="#l">FAQ</a></li>
+  </ol>
+</nav>
+
+
+<section id="a">
+  <h2><span class="letter">A</span>Het plan in 1 minuut</h2>
+  <p>Je hebt nu nog geen klanten, geen budget en geen bewijs. Dat lossen we op in deze volgorde:</p>
+  <div class="chain">
+    <span>Gratis website</span><i>→</i><span>Testimonial</span><i>→</i><span>Klantenlijst</span><i>→</i><span>Betaald werk</span>
+  </div>
+  <ol>
+    <li><b>Gratis website.</b> Je zoekt installateurs (zonnepanelen, laadpalen, warmtepompen) met een slechte website of geen website. Je bouwt er gratis een nieuwe voor met Claude.</li>
+    <li><b>Testimonial.</b> Werkt de site? Dan vraag je een korte video en een tekst als review.</li>
+    <li><b>Klantenlijst.</b> Elke gratis klant is een naam op je lijst, een direct contact en bewijs voor je content.</li>
+    <li><b>Betaald werk.</b> Daarna bied je betaald werk aan: ads, een lead magnet, en een vaste maandelijkse beheerfee.</li>
+    <li><b>Filteren.</b> Heb je te veel gratis klanten? Dan zeg je: "Ik heb nu te veel klanten, mijn prijs gaat omhoog."</li>
+  </ol>
+  <div class="why"><b>Waarom zo?</b> Belgen zijn sceptisch. Ze betalen niet aan iemand die ze niet kennen. Als jij eerst gratis een eerste probleem oplost, krijg je vertrouwen. Dat vertrouwen verkoopt daarna het tweede probleem, en dat is betaald.</div>
+  <div class="warn"><b>Ads: spaar er nu al voor.</b> Nu focussen we op gratis websites en bellen. Leg ondertussen elke maand geld opzij voor ads. Als je bewijs hebt en klanten kan opvolgen, zetten we samen ads op, en dan werken ze veel beter.</div>
+  <ul class="checks">
+    <li><input type="checkbox" id="a1"><label for="a1"><span class="t">Ik heb het plan gelezen en snap de volgorde.</span><span class="klaar"><b>Klaar als:</b> je het in 3 zinnen kan uitleggen aan iemand anders.</span></label></li>
+  </ul>
+</section>
+
+
+<section id="b">
+  <h2><span class="letter">B</span>Week 1, dag per dag</h2>
+  <p>Je werkt in shiften. Plan je calls in de uren dat je vrij bent én bedrijven opnemen (meestal 9u–12u en 13u–17u). In het weekend nemen minder bedrijven op: bel dan in de voormiddag en gebruik de rest van de dag om sites te bouwen en lijsten te maken.</p>
+
+  <div class="day">
+    <h3>Dag 1 · woensdag 18/11</h3><div class="when">Oude leads bellen + nieuwe zoeken, setup 's avonds</div>
+    <ul class="checks">
+      <li><input type="checkbox" id="b1x"><label for="b1x"><span class="t">Overdag: alle oude leads bellen + nieuwe leads zoeken en bellen (zie "Vandaag starten").</span><span class="klaar"><b>Klaar als:</b> elke oude lead gebeld en je eerste nieuwe calls gelogd.</span></label></li>
+      <li><input type="checkbox" id="b1a"><label for="b1a"><span class="t">Claude Pro kopen en het Project aanmaken (zie C).</span><span class="klaar"><b>Klaar als:</b> het Project "NETO - Websites installateurs" bestaat met de instructies erin.</span></label></li>
+      <li><input type="checkbox" id="b1b"><label for="b1b"><span class="t">Google Sheet "NETO CRM" maken met de kolommen uit F.</span><span class="klaar"><b>Klaar als:</b> de kolommen er staan en het bestand op je gsm opent.</span></label></li>
+      <li><input type="checkbox" id="b1c"><label for="b1c"><span class="t">Gratis Netlify-account maken (zie D).</span><span class="klaar"><b>Klaar als:</b> je kan inloggen op app.netlify.com.</span></label></li>
+      <li><input type="checkbox" id="b1d"><label for="b1d"><span class="t">'s Avonds: lijst aanvullen tot 100 nieuwe installateurs voor morgen (zie E).</span><span class="klaar"><b>Klaar als:</b> 100 rijen met bedrijf, telefoon, stad en website-score.</span></label></li>
+      <li><input type="checkbox" id="b1e"><label for="b1e"><span class="t">Als je nog tijd hebt: video 1 en 2 uit J + notities.</span><span class="klaar"><b>Klaar als:</b> je notities volgens het sjabloon in je map staan.</span></label></li>
+    </ul>
+  </div>
+
+  <div class="day">
+    <h3>Dag 2 · donderdag 19/11</h3><div class="when">100 calls + eerste demo</div>
+    <ul class="checks">
+      <li><input type="checkbox" id="b2a"><label for="b2a"><span class="t">Je eerste demo-website bouwen voor je beste lead (zie D).</span><span class="klaar"><b>Klaar als:</b> de site online staat via een Netlify-link en goed werkt op je gsm.</span></label></li>
+      <li><input type="checkbox" id="b2b"><label for="b2b"><span class="t">Een korte schermopname van die demo maken.</span><span class="klaar"><b>Klaar als:</b> een video van max. 60 seconden op je gsm staat.</span></label></li>
+      <li><input type="checkbox" id="b2c"><label for="b2c"><span class="t">100 calls doen met de gids van Victor (zie G).</span><span class="klaar"><b>Klaar als:</b> 100 rijen in je CRM een resultaat hebben.</span></label></li>
+      <li><input type="checkbox" id="b2d"><label for="b2d"><span class="t">Avondrapport in RAY CONTENT posten.</span><span class="klaar"><b>Klaar als:</b> je bericht in de groep staat (formaat in F).</span></label></li>
+    </ul>
+  </div>
+
+  <div class="day">
+    <h3>Dag 3 · vrijdag 20/11</h3><div class="when">Ritme vinden</div>
+    <ul class="checks">
+      <li><input type="checkbox" id="b3a"><label for="b3a"><span class="t">2 nieuwe demo's bouwen voor je beste leads.</span><span class="klaar"><b>Klaar als:</b> 2 extra Netlify-links in je CRM in de kolom "demo link".</span></label></li>
+      <li><input type="checkbox" id="b3b"><label for="b3b"><span class="t">100 calls + follow-ups van gisteren.</span><span class="klaar"><b>Klaar als:</b> alle follow-ups van vandaag zijn gebeld en 100 calls gelogd.</span></label></li>
+      <li><input type="checkbox" id="b3c"><label for="b3c"><span class="t">Avondrapport posten.</span><span class="klaar"><b>Klaar als:</b> het bericht in de groep staat.</span></label></li>
+    </ul>
+  </div>
+
+  <div class="day">
+    <h3>Dag 4 · zaterdag 21/11</h3><div class="when">Call met ons om 18:00</div>
+    <ul class="checks">
+      <li><input type="checkbox" id="b4a"><label for="b4a"><span class="t">Voormiddag: calls doen naar bedrijven die op zaterdag open zijn.</span><span class="klaar"><b>Klaar als:</b> elke call in je CRM staat.</span></label></li>
+      <li><input type="checkbox" id="b4b"><label for="b4b"><span class="t">Namiddag: nieuwe leads zoeken, je lijst aanvullen tot 100+ voor maandag.</span><span class="klaar"><b>Klaar als:</b> minstens 100 nieuwe nummers in je Sheet.</span></label></li>
+      <li><input type="checkbox" id="b4c"><label for="b4c"><span class="t">Call met het AS Media team om 18:00. Neem je notities en je vragen mee.</span><span class="klaar"><b>Klaar als:</b> je de call gedaan hebt en 3 actiepunten genoteerd hebt.</span></label></li>
+      <li><input type="checkbox" id="b4d"><label for="b4d"><span class="t">Avondrapport posten.</span><span class="klaar"><b>Klaar als:</b> het bericht in de groep staat.</span></label></li>
+    </ul>
+  </div>
+
+  <div class="day">
+    <h3>Dag 5 · zondag 22/11</h3><div class="when">Bouwdag + leren</div>
+    <ul class="checks">
+      <li><input type="checkbox" id="b5a"><label for="b5a"><span class="t">3 demo's bouwen voor de beste leads van maandag.</span><span class="klaar"><b>Klaar als:</b> 3 werkende links in je CRM.</span></label></li>
+      <li><input type="checkbox" id="b5b"><label for="b5b"><span class="t">2 video's uit J bekijken + notities.</span><span class="klaar"><b>Klaar als:</b> de vragen per video beantwoord zijn.</span></label></li>
+      <li><input type="checkbox" id="b5c"><label for="b5c"><span class="t">Nieuw TikTok-account aanmaken (zie I).</span><span class="klaar"><b>Klaar als:</b> account bestaat, met tweestapsverificatie aan.</span></label></li>
+    </ul>
+  </div>
+
+  <div class="day">
+    <h3>Dag 6 · maandag 23/11</h3><div class="when">Volle beldag</div>
+    <ul class="checks">
+      <li><input type="checkbox" id="b6a"><label for="b6a"><span class="t">100 calls + alle follow-ups.</span><span class="klaar"><b>Klaar als:</b> 100 resultaten in je CRM.</span></label></li>
+      <li><input type="checkbox" id="b6b"><label for="b6b"><span class="t">Elke geboekte call: demo klaarzetten en link doorsturen (prompt 3).</span><span class="klaar"><b>Klaar als:</b> elke geïnteresseerde de demo heeft gekregen.</span></label></li>
+      <li><input type="checkbox" id="b6c"><label for="b6c"><span class="t">Tweede call van de week met ons inplannen.</span><span class="klaar"><b>Klaar als:</b> er een datum en uur vastligt.</span></label></li>
+      <li><input type="checkbox" id="b6d"><label for="b6d"><span class="t">Avondrapport posten.</span><span class="klaar"><b>Klaar als:</b> het bericht in de groep staat.</span></label></li>
+    </ul>
+  </div>
+
+  <div class="day">
+    <h3>Dag 7 · dinsdag 24/11</h3><div class="when">Calls + terugblik</div>
+    <ul class="checks">
+      <li><input type="checkbox" id="b7a"><label for="b7a"><span class="t">100 calls + follow-ups.</span><span class="klaar"><b>Klaar als:</b> 100 resultaten in je CRM.</span></label></li>
+      <li><input type="checkbox" id="b7b"><label for="b7b"><span class="t">Weektotaal berekenen: calls, gesprekken, interesse, geboekte calls.</span><span class="klaar"><b>Klaar als:</b> je de 4 cijfers in de groep gepost hebt.</span></label></li>
+      <li><input type="checkbox" id="b7c"><label for="b7c"><span class="t">Noteren wat het vaakst "nee" opleverde en waarom.</span><span class="klaar"><b>Klaar als:</b> een lijstje met de 3 meest gehoorde bezwaren klaar ligt voor de volgende call.</span></label></li>
+    </ul>
+  </div>
+</section>
+
+
+<section id="c">
+  <h2><span class="letter">C</span>Setup: Claude</h2>
+  <p>Claude is de AI die je websites schrijft. Jij geeft de info, Claude maakt de code.</p>
+
+  <h3>1. Claude Pro kopen</h3>
+  <ul class="checks">
+    <li><input type="checkbox" id="c1"><label for="c1"><span class="t">Ga naar <a href="https://claude.ai" target="_blank" rel="noopener">claude.ai</a>, maak een account en kies het <b>Pro</b>-plan.</span><span class="klaar"><b>Klaar als:</b> je linksonder "Pro" ziet staan. De actuele prijs zie je op <a href="https://claude.com/pricing" target="_blank" rel="noopener">claude.com/pricing</a>.</span></label></li>
+  </ul>
+  <div class="why"><b>Waarom Pro?</b> Met de gratis versie zit je snel aan je limiet en kan je geen Projects gebruiken. Een volledige website in één keer vraagt veel van Claude.</div>
+
+  <h3>2. Project aanmaken <i class="info" tabindex="0" data-tip="Een Project is een vaste map in Claude met eigen instructies. Elke chat in dat Project kent automatisch je niche, je aanbod en je regels. Zo moet je niet elke keer alles opnieuw uitleggen.">i</i></h3>
+  <ul class="checks">
+    <li><input type="checkbox" id="c2"><label for="c2"><span class="t">Klik in Claude links op <b>Projects</b> → <b>Create project</b>. Naam: <b>NETO - Websites installateurs</b>.</span><span class="klaar"><b>Klaar als:</b> het Project in je lijst staat.</span></label></li>
+    <li><input type="checkbox" id="c3"><label for="c3"><span class="t">Open het Project → <b>Project instructions</b> (of "Set project instructions") → plak de tekst hieronder → opslaan.</span><span class="klaar"><b>Klaar als:</b> de instructies opgeslagen zijn.</span></label></li>
+  </ul>
+
+  <div class="box">
+    <div class="label">Project-instructies (kopiëren en plakken)</div>
+    <button class="copy" type="button">Kopieer</button>
+<pre>Je bent de webdesigner van NETO Agency, een jong marketingbureau in Vlaanderen.
+
+WIE WE HELPEN
+- Installateurs in Vlaanderen/België: zonnepanelen, laadpalen, warmtepompen (en vaak thuisbatterijen).
+- Zowel B2C (particulieren) als B2B (bedrijven).
+- Het zijn vakmensen. Ze hebben geen tijd voor marketing. Hun website is vaak oud, traag, niet mobiel of bestaat niet.
+
+ONS AANBOD
+- We bouwen eerst GRATIS een nieuwe website om vertrouwen te winnen en een testimonial te krijgen.
+- Later: advertenties, lead magnets en maandelijks beheer.
+- De website heeft één doel: meer offerteaanvragen en telefoontjes voor de installateur.
+
+HOE EEN INSTALLATEURSWEBSITE MOET ZIJN
+- Mobile first: de meeste bezoekers komen via de gsm. Alles moet perfect werken op een smal scherm.
+- Eén pagina (one-page), snel, proper, modern. Veel witruimte, grote knoppen.
+- Duidelijk en eerlijk. Geen overdreven beloftes.
+- Kleuren en logo van de installateur gebruiken als ik ze geef. Anders: wit met één sterke accentkleur.
+
+CHECKLIST: DEZE BLOKKEN MOETEN ERIN
+1. Hero: wat ze doen + waar, in één zin. Grote knop "Gratis offerte" en een knop "Bel ons".
+2. Werkgebied: steden/gemeenten/regio waar ze installeren.
+3. Diensten: per dienst een kort blok (bv. zonnepanelen, laadpalen, warmtepompen, thuisbatterij, onderhoud).
+4. Reviews: echte Google-reviews die ik je geef, met naam en sterren. Verzin NOOIT reviews.
+5. Premies en subsidies: kort uitleggen dat er premies kunnen bestaan en linken naar de officiële bron (www.vlaanderen.be/premies). Noem GEEN bedragen of voorwaarden, tenzij ik ze geef met een bron. Die veranderen vaak.
+6. Offerteformulier: naam, telefoon, e-mail, gemeente, type project (keuzelijst), korte boodschap. Duidelijke verzendknop.
+7. WhatsApp-knop: zwevende knop rechtsonder die opent naar https://wa.me/32XXXXXXXXX (nummer zonder 0 vooraan, met 32).
+8. Foto's van projecten: een galerij. Gebruik de foto-links die ik geef. Heb ik er geen, zet dan nette grijze vlakken met de tekst "Foto project" zodat ik ze later kan vervangen.
+9. FAQ: 5-6 vragen die klanten echt stellen (duur van de installatie, wat na de offerte, onderhoud, garantie, kan het op mijn dak/in mijn garage).
+10. Footer: bedrijfsnaam, adres, telefoon, e-mail, btw-nummer als ik het geef.
+
+TECHNISCH
+- Lever altijd ÉÉN volledig HTML-bestand: HTML + CSS + eventuele JavaScript erin. Geen externe bestanden behalve Google Fonts.
+- Het formulier verstuurt via Web3Forms (https://api.web3forms.com/submit) met een verborgen veld "access_key". Laat de waarde "VUL-HIER-JE-KEY-IN" staan als ik geen key geef.
+- Goede titel en meta description voor Google, met dienst + regio.
+- Snel laden: geen zware animaties, geen grote scripts.
+
+TAAL EN TOON
+- Alle websiteteksten in het Nederlands, Vlaams en natuurlijk. Kort, warm, direct. "Je" of "u" volgens wat ik vraag (standaard: "u" voor B2B, "je" voor B2C).
+- Geen anglicismen waar een gewoon Nederlands woord bestaat.
+
+REGELS
+- Verzin nooit cijfers, reviews, certificaten, jaren ervaring of resultaten. Weet je iets niet: vraag het of laat een duidelijk invulveld staan.
+- Antwoord kort. Als ik om code vraag: geef de volledige code, niet in stukjes.</pre>
+  </div>
+
+  <h3>3. De 3 vaste prompts</h3>
+  <p>Open een nieuwe chat <b>in het Project</b>. Kopieer de prompt, vul de [haakjes] in en verstuur.</p>
+
+  <div class="box">
+    <div class="label">Prompt 1 · Huidige website analyseren</div>
+    <button class="copy" type="button">Kopieer</button>
+<pre>Analyseer de huidige website van deze installateur: [URL]
+
+Bedrijf: [naam]
+Diensten: [bv. zonnepanelen en laadpalen]
+Regio: [stad/regio]
+
+Geef me:
+1. Een score op 10 voor: mobiel, snelheid (gevoel), design, vertrouwen, contactmogelijkheden.
+2. De 5 grootste problemen, in gewone taal, elk in één zin.
+3. Welke blokken uit onze checklist ontbreken.
+4. Eén zin die ik aan de telefoon kan zeggen over wat er het meest mis is, zonder de eigenaar te beledigen.
+
+Kort en concreet. Verzin niets dat je niet op de site ziet.</pre>
+  </div>
+
+  <div class="box">
+    <div class="label">Prompt 2 · Volledige one-page website bouwen</div>
+    <button class="copy" type="button">Kopieer</button>
+<pre>Bouw een volledige one-page website als één HTML-bestand volgens onze checklist.
+
+GEGEVENS
+Bedrijfsnaam: [naam]
+Diensten: [lijst]
+Werkgebied: [steden/regio]
+Telefoon: [nummer]
+WhatsApp: [nummer, of "zelfde als telefoon"]
+E-mail: [e-mail]
+Adres: [adres]
+Btw-nummer: [nummer of "niet bekend"]
+Kleuren/logo: [kleuren of link naar logo, of "kies zelf"]
+Doelgroep: [particulieren / bedrijven / beide]
+Aanspreking: [je / u]
+Wat hen anders maakt: [wat je weet, bv. eigen ploeg, snelle installatie, vaste prijs]
+Google-reviews (exact overgenomen):
+- [naam] · [sterren] · "[tekst]"
+- [naam] · [sterren] · "[tekst]"
+Foto-links: [links of "geen"]
+Web3Forms key: [key of "nog niet"]
+
+Lever de volledige code in één blok. Mobile first. Geen verzonnen info.</pre>
+  </div>
+
+  <div class="box">
+    <div class="label">Prompt 3 · Kort bericht om de demo te tonen</div>
+    <button class="copy" type="button">Kopieer</button>
+<pre>Schrijf een kort bericht om een demo-website te tonen aan een installateur.
+
+Kanaal: [WhatsApp / e-mail]
+Naam eigenaar: [voornaam]
+Bedrijf: [naam]
+Wat er mis was met de oude site of dat er geen site was: [één zin]
+Demo-link: [link]
+Gesproken aan de telefoon: [ja/nee + wat er gezegd is]
+
+Regels:
+- Max. 5 korte zinnen. Vlaams, warm, direct, geen verkoopspraat.
+- Zeg dat het gratis is en dat er niets aan vastzit.
+- Eindig met één simpele vraag (bv. "Mag ik je 10 minuten tonen wat er nog beter kan?").
+- Bij WhatsApp: geen onderwerpregel. Bij e-mail: een korte onderwerpregel erbij.</pre>
+  </div>
+  <ul class="checks">
+    <li><input type="checkbox" id="c4"><label for="c4"><span class="t">De 3 prompts opgeslagen in een notitie op je gsm of computer.</span><span class="klaar"><b>Klaar als:</b> je ze in 5 seconden kan terugvinden.</span></label></li>
+  </ul>
+</section>
+
+
+<section id="d">
+  <h2><span class="letter">D</span>Website bouwen + online zetten in 1 uur</h2>
+  <div class="warn"><b>Belangrijk:</b> zeg aan de telefoon alleen "ik heb al een nieuwe voor je gemaakt" als dat echt zo is. Heb je nog geen demo? Zeg dan "ik maak gratis een nieuwe voor je". Bouw elke dag 2-3 demo's voor je beste leads, dan kan je bij hen wel zeggen dat hij al klaar is.</div>
+
+  <h3>Stap 1 · Info verzamelen (15 min)</h3>
+  <ul class="checks">
+    <li><input type="checkbox" id="d1"><label for="d1"><span class="t"><b>Google Maps:</b> naam, adres, telefoon, openingsuren, reviews (kopieer er 3-5 letterlijk), foto's.</span><span class="klaar"><b>Klaar als:</b> alles in een notitie staat.</span></label></li>
+    <li><input type="checkbox" id="d2"><label for="d2"><span class="t"><b>Huidige website</b> (als die er is): diensten, werkgebied, logo, kleuren. Draai prompt 1.</span><span class="klaar"><b>Klaar als:</b> je de 5 problemen kent.</span></label></li>
+    <li><input type="checkbox" id="d3"><label for="d3"><span class="t"><b>Facebook / Instagram:</b> projectfoto's en wat ze zelf over hun werk zeggen.</span><span class="klaar"><b>Klaar als:</b> je 3-6 foto's of links hebt.</span></label></li>
+  </ul>
+
+  <h3>Stap 2 · Claude bouwt de site (20 min)</h3>
+  <ul class="checks">
+    <li><input type="checkbox" id="d4"><label for="d4"><span class="t">Vul prompt 2 in met je info en verstuur in het Project.</span><span class="klaar"><b>Klaar als:</b> Claude één blok code geeft (of een voorbeeld rechts toont).</span></label></li>
+    <li><input type="checkbox" id="d5"><label for="d5"><span class="t">Kopieer de code. Plak ze in een leeg tekstbestand en bewaar het als <b>index.html</b> in een map met de bedrijfsnaam. <i class="info" tabindex="0" data-tip="Op Mac: open TextEdit, kies Opmaak > Maak platte tekst, plak, bewaar als index.html. Op Windows: Kladblok, Opslaan als, type 'Alle bestanden', naam index.html. Je kan ook de downloadknop bij Claude's preview gebruiken als die er staat.">i</i></span><span class="klaar"><b>Klaar als:</b> je de site ziet als je dubbelklikt op index.html.</span></label></li>
+    <li><input type="checkbox" id="d6"><label for="d6"><span class="t">Check op je gsm-formaat en vraag Claude wat moet beter ("maak de hero korter", "de knop is te klein").</span><span class="klaar"><b>Klaar als:</b> de site er goed uitziet op je gsm en alle 10 checklistblokken erin zitten.</span></label></li>
+  </ul>
+
+  <h3>Stap 3 · Formulier naar je e-mail (5 min) <i class="info" tabindex="0" data-tip="Een HTML-bestand kan zelf geen e-mail versturen. Web3Forms is een gratis dienst die het formulier ontvangt en doorstuurt naar het e-mailadres dat bij de key hoort.">i</i></h3>
+  <ul class="checks">
+    <li><input type="checkbox" id="d7"><label for="d7"><span class="t">Ga naar <a href="https://web3forms.com" target="_blank" rel="noopener">web3forms.com</a>, vul je e-mailadres in en ontvang je gratis access key.</span><span class="klaar"><b>Klaar als:</b> je key in je mailbox zit.</span></label></li>
+    <li><input type="checkbox" id="d8"><label for="d8"><span class="t">Vervang in de code "VUL-HIER-JE-KEY-IN" door je key. Test met een eigen aanvraag.</span><span class="klaar"><b>Klaar als:</b> je testaanvraag in je mailbox toekomt.</span></label></li>
+  </ul>
+  <p style="color:var(--muted);font-size:14px">Voor de demo komt het formulier bij jou toe. Zegt de installateur ja, dan zet je een key op zijn e-mailadres.</p>
+
+  <h3>Stap 4 · Gratis online zetten (5 min)</h3>
+  <p><b>Optie 1: Netlify Drop</b> (de makkelijkste) <i class="info" tabindex="0" data-tip="Hosting = de plek op internet waar je bestand staat, zodat iedereen het via een link kan openen. Netlify doet dat gratis voor kleine sites.">i</i></p>
+  <ul class="checks">
+    <li><input type="checkbox" id="d9"><label for="d9"><span class="t">Log in op Netlify en ga naar <a href="https://app.netlify.com/drop" target="_blank" rel="noopener">app.netlify.com/drop</a>.</span><span class="klaar"><b>Klaar als:</b> je het vak "drag and drop" ziet.</span></label></li>
+    <li><input type="checkbox" id="d10"><label for="d10"><span class="t">Sleep de <b>map</b> met index.html in het vak. Wacht een paar seconden.</span><span class="klaar"><b>Klaar als:</b> je een link krijgt die eindigt op .netlify.app.</span></label></li>
+    <li><input type="checkbox" id="d11"><label for="d11"><span class="t">Ga naar <b>Site configuration → Change site name</b> en kies een nette naam, bv. <i>bedrijfsnaam-demo</i>.</span><span class="klaar"><b>Klaar als:</b> de link bedrijfsnaam-demo.netlify.app werkt op je gsm.</span></label></li>
+  </ul>
+  <p style="color:var(--muted);font-size:14px">Altijd eerst inloggen. Zonder account blijft een Drop-site maar kort online.</p>
+
+  <details>
+    <summary>Optie 2: GitHub Pages (alternatief)</summary>
+    <ol>
+      <li>Maak een gratis account op <a href="https://github.com" target="_blank" rel="noopener">github.com</a>.</li>
+      <li>Klik op <b>New repository</b>. Naam: bv. <i>bedrijfsnaam-demo</i>. Zet op <b>Public</b>. Create.</li>
+      <li>Klik op <b>uploading an existing file</b>, sleep index.html erin, klik <b>Commit changes</b>.</li>
+      <li>Ga naar <b>Settings → Pages</b>. Bij "Branch" kies <b>main</b> en <b>/ (root)</b>. Save.</li>
+      <li>Na 1-2 minuten staat je site op <i>jouwnaam.github.io/bedrijfsnaam-demo</i>.</li>
+    </ol>
+  </details>
+
+  <h3>Stap 5 · Schermopname van de demo (5 min)</h3>
+  <ul class="checks">
+    <li><input type="checkbox" id="d12"><label for="d12"><span class="t">Open de demo op je gsm en neem een schermopname: scroll rustig van boven naar onder, tik op de WhatsApp-knop en het formulier. Max. 60 seconden.</span><span class="klaar"><b>Klaar als:</b> de video klaar staat om te tonen of te sturen.</span></label></li>
+    <li><input type="checkbox" id="d13"><label for="d13"><span class="t">Link + datum in je CRM zetten (kolom "demo link").</span><span class="klaar"><b>Klaar als:</b> de link in de juiste rij staat.</span></label></li>
+  </ul>
+
+  <h3>Later: eigen domein</h3>
+  <p>Zegt de installateur ja, dan zetten we de site later op zijn eigen domeinnaam (bv. bedrijfsnaam.be). Dat leggen we uit op een call. Nu nog niet nodig.</p>
+</section>
+
+
+<section id="e">
+  <h2><span class="letter">E</span>Leads vinden</h2>
+  <p><b>Eerst je oude leads</b> (iedereen die je al kent of ooit sprak), <b>daarna elke dag nieuwe.</b> Allebei, elke dag.</p>
+  <p>Doel: <b>100+ nieuwe nummers per dag</b> in je lijst.</p>
+
+  <h3>Waar zoeken</h3>
+  <ul>
+    <li><b>Google Maps</b>, zoek per stad:
+      <ul>
+        <li>"zonnepanelen installateur [stad]"</li>
+        <li>"laadpalen installateur [stad]"</li>
+        <li>"warmtepomp installateur [stad]"</li>
+      </ul>
+      Begin met steden en gemeenten bij jou in de buurt, daarna verder door Vlaanderen.</li>
+    <li><b><a href="https://www.goudengids.be" target="_blank" rel="noopener">Gouden Gids</a></b>: zoek op dezelfde woorden per gemeente.</li>
+    <li><b>Facebook</b>: veel kleine installateurs hebben enkel een Facebook-pagina en geen website. Dat zijn perfecte leads.</li>
+  </ul>
+
+  <h3>Slechte website herkennen in 30 seconden</h3>
+  <p>Open de site <b>op je gsm</b>. Twee of meer "ja" = slecht.</p>
+  <div class="tablewrap"><table>
+    <tr><th>Check</th><th>Slecht als...</th></tr>
+    <tr><td>Mobiel</td><td>Je moet inzoomen, tekst is te klein, menu werkt niet.</td></tr>
+    <tr><td>Snelheid</td><td>Je wacht langer dan 3 seconden voor je iets ziet.</td></tr>
+    <tr><td>Formulier</td><td>Er is geen offerteformulier of geen duidelijke belknop.</td></tr>
+    <tr><td>Design</td><td>Ziet eruit van 10 jaar geleden, oude foto's, rommelig.</td></tr>
+    <tr><td>Reviews</td><td>Geen enkele review of bewijs van projecten.</td></tr>
+  </table></div>
+  <p>Geef in je CRM een score: <b>geen</b> (geen site), <b>slecht</b>, of <b>ok</b>. Bel eerst "geen" en "slecht".</p>
+
+  <ul class="checks">
+    <li><input type="checkbox" id="e1"><label for="e1"><span class="t">Ik heb een vaste manier om 100 nummers per dag te verzamelen.</span><span class="klaar"><b>Klaar als:</b> je 100 nummers in minder dan 2 uur kan vinden.</span></label></li>
+  </ul>
+</section>
+
+
+<section id="f">
+  <h2><span class="letter">F</span>Je CRM-lijst <i class="info" tabindex="0" data-tip="CRM = de lijst waar je elk contact en elk gesprek bijhoudt. Bij ons gewoon een Google Sheet. Zo vergeet je nooit wie je moet terugbellen.">i</i></h2>
+  <p>Maak een Google Sheet met deze kolommen. Kopieer de regel hieronder en plak ze in cel A1: de kolommen vullen zich vanzelf.</p>
+  <div class="box">
+    <div class="label">Kolommen (plak in cel A1)</div>
+    <button class="copy" type="button" data-tsv="1">Kopieer</button>
+<pre>datum	bedrijf	contact	telefoon	stad	website (geen/slecht/ok)	gebeld (j/n)	resultaat	follow-up datum	demo link	notities</pre>
+  </div>
+  <div class="tablewrap"><table>
+    <tr><th>Kolom</th><th>Wat vul je in</th></tr>
+    <tr><td>datum</td><td>Dag dat je de lead toevoegt</td></tr>
+    <tr><td>bedrijf</td><td>Naam van het bedrijf</td></tr>
+    <tr><td>contact</td><td>Naam van de eigenaar of wie je spreekt</td></tr>
+    <tr><td>telefoon</td><td>Nummer</td></tr>
+    <tr><td>stad</td><td>Gemeente</td></tr>
+    <tr><td>website</td><td>geen / slecht / ok</td></tr>
+    <tr><td>gebeld</td><td>j / n</td></tr>
+    <tr><td>resultaat</td><td>geen antwoord / niet geïnteresseerd / geïnteresseerd / call geboekt</td></tr>
+    <tr><td>follow-up datum</td><td>Wanneer je terugbelt</td></tr>
+    <tr><td>demo link</td><td>Netlify-link van de demo</td></tr>
+    <tr><td>notities</td><td>Wat er gezegd is, bezwaren, beste moment om te bellen</td></tr>
+  </table></div>
+  <p style="color:var(--muted);font-size:14px">Tip: maak van de kolom "resultaat" een keuzelijst (Gegevens → Gegevensvalidatie → Dropdown) met de 4 opties.</p>
+
+  <h3>Dagelijkse routine</h3>
+  <ul class="checks">
+    <li><input type="checkbox" id="f1"><label for="f1"><span class="t">Start: filter op "follow-up datum = vandaag" en bel die eerst.</span><span class="klaar"><b>Klaar als:</b> alle follow-ups van vandaag gebeld zijn.</span></label></li>
+    <li><input type="checkbox" id="f2"><label for="f2"><span class="t">Daarna nieuwe nummers bellen tot je aan 100 zit. Na elke call meteen invullen.</span><span class="klaar"><b>Klaar als:</b> 100 rijen met een resultaat.</span></label></li>
+    <li><input type="checkbox" id="f3"><label for="f3"><span class="t">Elke "geïnteresseerd" krijgt een follow-up datum. Elke "call geboekt" krijgt een demo.</span><span class="klaar"><b>Klaar als:</b> geen enkele interesse zonder volgende stap.</span></label></li>
+    <li><input type="checkbox" id="f4"><label for="f4"><span class="t">'s Avonds: je cijfers tellen en posten in RAY CONTENT.</span><span class="klaar"><b>Klaar als:</b> je rapport in de groep staat.</span></label></li>
+  </ul>
+
+  <h3>Avondrapport (elke avond in RAY CONTENT)</h3>
+  <div class="box">
+    <div class="label">Formaat</div>
+    <button class="copy" type="button">Kopieer</button>
+<pre>Dag X: 100 calls, Y gesprekken, Z interesse, N calls geboekt</pre>
+  </div>
+  <p style="color:var(--muted);font-size:14px">Voorbeeld van hoe het eruitziet (geen echt cijfer): "Dag 3: 100 calls, 18 gesprekken, 4 interesse, 1 call geboekt".</p>
+</section>
+
+
+<section id="g">
+  <h2><span class="letter">G</span>Cold call gids</h2>
+  <div class="placeholder">
+    <b>Komt van Victor</b>
+    <p>Victor schrijft je belscript. Zodra het klaar is, krijg je het in de groep en komt het hier.</p>
+    <p style="color:var(--muted);font-size:14px">Tot dan: het doel van elke call is <b>een call boeken</b>. Niet verkopen aan de telefoon.</p>
+  </div>
+  <ul class="checks">
+    <li><input type="checkbox" id="g1"><label for="g1"><span class="t">Ik heb de gids van Victor ontvangen en 3 keer hardop geoefend.</span><span class="klaar"><b>Klaar als:</b> je hem kan zeggen zonder af te lezen.</span></label></li>
+  </ul>
+</section>
+
+
+<section id="h">
+  <h2><span class="letter">H</span>Na de gratis website</h2>
+
+  <h3>1. Testimonial krijgen</h3>
+  <p><b>Wat:</b> een korte video (30-60 sec, gefilmd met hun gsm) en een geschreven review.</p>
+  <p><b>Wanneer:</b> zodra de site de eerste aanvraag oplevert. Dan zijn ze het blijst.</p>
+  <p><b>Waarom:</b> een echte installateur die zegt "dit werkt" overtuigt de volgende installateur beter dan alles wat jij zegt.</p>
+  <ul class="checks">
+    <li><input type="checkbox" id="h1"><label for="h1"><span class="t">Eerste testimonial binnen (video + tekst), met toestemming om te delen.</span><span class="klaar"><b>Klaar als:</b> beide bestanden in je klantmap staan.</span></label></li>
+  </ul>
+
+  <h3>2. Leads van de site bijhouden</h3>
+  <p><b>Wat:</b> het formulier stuurt elke aanvraag naar een e-mail (Web3Forms). Vraag de installateur om je te laten weten hoeveel aanvragen er binnenkomen, of laat het formulier ook in kopie naar jou sturen.</p>
+  <p><b>Waarom:</b> zonder cijfers heb je geen bewijs. Met cijfers kan je zeggen: "deze site bracht X aanvragen op." Alleen echte cijfers, nooit schatten.</p>
+
+  <h3>3. Wanneer je begint te vragen voor geld</h3>
+  <p><b>Wat:</b> zodra je een paar gratis klanten hebt met echte resultaten en testimonials, wordt de volgende website betaald. Bij bestaande gratis klanten bied je de volgende stap aan.</p>
+  <p><b>Waarom:</b> met bewijs ben je geen onbekende meer. Prijzen en timing bespreken we samen op de call.</p>
+
+  <h3>4. Upsell: ads en beheer</h3>
+  <p><b>Wat:</b> de site staat, nu brengen we meer volk: advertenties, een lead magnet in je pipeline <i class="info" tabindex="0" data-tip="Lead magnet = iets gratis en nuttigs dat een bezoeker krijgt in ruil voor zijn gegevens, bv. een premie-checklist. Pipeline = de weg van eerste contact tot klant.">i</i>, en een vaste maandelijkse beheerfee.</p>
+  <p><b>Waarom:</b> eenmalige websites zijn eenmalig geld. Beheer elke maand is stabiel inkomen. Het hoe leren we je op de calls.</p>
+</section>
+
+
+<section id="i">
+  <h2><span class="letter">I</span>Content</h2>
+  <p>Elk resultaat is content. Je hoeft niets te verzinnen: je toont wat je echt doet.</p>
+  <h3>Je TikTok: frisse start</h3>
+  <ul class="checks">
+    <li><input type="checkbox" id="i1"><label for="i1"><span class="t">Nieuw account aanmaken voor NETO Agency, met een sterk wachtwoord en tweestapsverificatie aan.</span><span class="klaar"><b>Klaar als:</b> account staat, profielfoto en bio ingevuld.</span></label></li>
+  </ul>
+  <h3>Video-ideeën (kort, 30-60 sec)</h3>
+  <ul>
+    <li><b>Voor / na:</b> oude website vs. nieuwe website, scherm naast scherm op gsm.</li>
+    <li><b>Bouw in 60 seconden:</b> versneld filmen hoe je een site bouwt voor een installateur.</li>
+    <li><b>30-seconden check:</b> je beoordeelt (anoniem) een slechte installateurssite en zegt wat er mis is.</li>
+    <li><b>Resultaat:</b> "Deze website bracht installateur X [echt aantal] aanvragen deze maand." Alleen met echte cijfers en toestemming.</li>
+    <li><b>Testimonial:</b> de video van je klant, met een korte tekst erboven.</li>
+    <li><b>Dag uit mijn leven:</b> 100 calls per dag, wat je hoort, wat je leert.</li>
+  </ul>
+  <div class="why"><b>Waarom:</b> installateurs die jouw video's zien, kennen je al als je belt. Dat maakt je calls makkelijker.</div>
+</section>
+
+
+<section id="j">
+  <h2><span class="letter">J</span>Leren: video's</h2>
+  <p>Allemaal gecontroleerd op 17/11. Bekijk ze in deze volgorde. Per video beantwoord je de vragen in je notities.</p>
+
+  <h3>Basis: wat is een website?</h3>
+  <div class="video">
+    <span class="num">Video 1</span><span class="tag">Engels</span>
+    <h3>HTML Tutorial for Beginners: HTML Crash Course</h3>
+    <div class="by">Programming with Mosh · <a href="https://www.youtube.com/watch?v=qz0aGYrrlhU" target="_blank" rel="noopener">youtube.com/watch?v=qz0aGYrrlhU</a></div>
+    <p><b>Waarom:</b> legt duidelijk uit hoe het web werkt en wat HTML is. Je moet niet leren programmeren: kijk het begin tot en met het stuk "How the Web Works" (vanaf 9:36).</p>
+    <ol><li>Wat gebeurt er als iemand een website opent?</li><li>Wat is HTML en wat is CSS, in één zin elk?</li></ol>
+  </div>
+  <div class="video">
+    <span class="num">Video 2</span><span class="tag">Engels</span>
+    <h3>How to put an HTML website online (on the Internet)</h3>
+    <div class="by">SuperSimpleDev · <a href="https://www.youtube.com/watch?v=p1QU3kLFPdg" target="_blank" rel="noopener">youtube.com/watch?v=p1QU3kLFPdg</a></div>
+    <p><b>Waarom:</b> legt simpel uit hoe een bestand op je computer een website op internet wordt: hosting en domeinnaam.</p>
+    <ol><li>Wat is het verschil tussen hosting en een domeinnaam?</li><li>Waarom moet het bestand index.html heten?</li></ol>
+  </div>
+
+  <h3>Claude leren gebruiken</h3>
+  <div class="video">
+    <span class="num">Video 3</span><span class="tag">Nederlands</span>
+    <h3>Claude Tutorial 2026 in het Nederlands.</h3>
+    <div class="by">Mika Karthe · <a href="https://www.youtube.com/watch?v=mdr-6RSD9lk" target="_blank" rel="noopener">youtube.com/watch?v=mdr-6RSD9lk</a></div>
+    <p><b>Waarom:</b> een rustige uitleg van Claude in het Nederlands, ideaal om de knoppen en functies te leren kennen.</p>
+    <ol><li>Wat is een Project en waarom gebruik je het?</li><li>Welke 2 tips ga je meteen toepassen in je eigen Project?</li></ol>
+  </div>
+  <div class="video">
+    <span class="num">Video 4</span><span class="tag">Nederlands</span>
+    <h3>De Ultieme Gids voor Beginners over Claude AI</h3>
+    <div class="by">Metics Media | Nederlands · <a href="https://www.youtube.com/watch?v=zumYocQ7xRo" target="_blank" rel="noopener">youtube.com/watch?v=zumYocQ7xRo</a></div>
+    <p><b>Waarom:</b> neemt je stap voor stap mee van je eerste prompt tot gevorderd gebruik.</p>
+    <ol><li>Wat maakt een goede prompt?</li><li>Wat doe je als Claude iets fout doet?</li><li>Welk niveau is voor jou nu het belangrijkste?</li></ol>
+  </div>
+
+  <h3>Een website bouwen met Claude</h3>
+  <div class="video">
+    <span class="num">Video 5</span><span class="tag">Nederlands</span>
+    <h3>Website in 2 minuten met Claude AI: eindelijk is het goed genoeg!</h3>
+    <div class="by">Bart Boonstra · <a href="https://www.youtube.com/watch?v=ie0RpPLUFPE" target="_blank" rel="noopener">youtube.com/watch?v=ie0RpPLUFPE</a></div>
+    <p><b>Waarom:</b> toont in het Nederlands hoe snel Claude een website maakt zonder code te schrijven.</p>
+    <ol><li>Welke info geeft hij aan Claude om een goede site te krijgen?</li><li>Wat past hij nog aan na de eerste versie?</li></ol>
+  </div>
+  <div class="video">
+    <span class="num">Video 6</span><span class="tag">Engels</span>
+    <h3>How to Make a Website with Claude | Step-by-Step</h3>
+    <div class="by">Tyler Moore · <a href="https://www.youtube.com/watch?v=0BbhrII3RuA" target="_blank" rel="noopener">youtube.com/watch?v=0BbhrII3RuA</a></div>
+    <p><b>Waarom:</b> volledige stap-voor-stap uitleg voor mensen die nog nooit code geschreven hebben.</p>
+    <ol><li>Welke stappen volgt hij, van idee tot werkende site?</li><li>Hoe vraagt hij om aanpassingen zonder alles opnieuw te doen?</li><li>Wat neem jij over in prompt 2?</li></ol>
+  </div>
+  <div class="video">
+    <span class="num">Video 7</span><span class="tag">Engels</span><span class="tag">Later</span>
+    <h3>The EASY way to build a beautiful website with Claude Code (full workflow)</h3>
+    <div class="by">Create a Pro Website · <a href="https://www.youtube.com/watch?v=fDTwHIKltpc" target="_blank" rel="noopener">youtube.com/watch?v=fDTwHIKltpc</a></div>
+    <p><b>Waarom:</b> een stap verder: mooiere sites bouwen met Claude Code. Bekijk dit pas als je eerste 3 demo's online staan.</p>
+    <ol><li>Wat maakt zijn sites mooier dan een eerste versie?</li><li>Welke 1 designregel kan jij al toepassen in je Project-instructies?</li></ol>
+  </div>
+
+  <h3>Gratis online zetten</h3>
+  <div class="video">
+    <span class="num">Video 8</span><span class="tag">Engels</span>
+    <h3>Netlify Tutorial – Drag and drop deploys on Netlify</h3>
+    <div class="by">Netlify (officieel kanaal) · <a href="https://www.youtube.com/watch?v=etZ9HSUoTPU" target="_blank" rel="noopener">youtube.com/watch?v=etZ9HSUoTPU</a></div>
+    <p><b>Waarom:</b> kort en officieel: precies hoe Netlify Drop werkt.</p>
+    <ol><li>Wat sleep je juist in het vak?</li><li>Hoe zet je een nieuwe versie online van dezelfde site?</li></ol>
+  </div>
+  <div class="video">
+    <span class="num">Video 9</span><span class="tag">Engels</span>
+    <h3>Getting started with GitHub Pages for beginners | Tutorial</h3>
+    <div class="by">GitHub (officieel kanaal) · <a href="https://www.youtube.com/watch?v=b2r9Cdvssi0" target="_blank" rel="noopener">youtube.com/watch?v=b2r9Cdvssi0</a></div>
+    <p><b>Waarom:</b> het alternatief voor Netlify, uitgelegd door GitHub zelf.</p>
+    <ol><li>Welke instelling zet je aan om de site live te krijgen?</li><li>Hoe ziet de link van je site eruit?</li></ol>
+  </div>
+
+  <h3>Extra (als je meer wil)</h3>
+  <div class="video">
+    <span class="num">Video 10</span><span class="tag">Engels</span><span class="tag">Optioneel</span>
+    <h3>FULL Claude Tutorial for Beginners in 2026! (Become a PRO!)</h3>
+    <div class="by">AI Foundations · <a href="https://www.youtube.com/watch?v=rRrBbyv3ChM" target="_blank" rel="noopener">youtube.com/watch?v=rRrBbyv3ChM</a></div>
+    <p><b>Waarom:</b> lange, volledige Claude-cursus. Handig als naslag: zoek het stuk op dat je nodig hebt.</p>
+    <ol><li>Welke functie van Claude kende je nog niet?</li><li>Hoe kan die functie je websites sneller maken?</li></ol>
+  </div>
+
+  <h3>Notitiesjabloon</h3>
+  <div class="box">
+    <div class="label">Kopieer per video</div>
+    <button class="copy" type="button">Kopieer</button>
+<pre>VIDEO: [nummer + titel]
+DATUM BEKEKEN:
+
+DE 3 BELANGRIJKSTE DINGEN
+1.
+2.
+3.
+
+ANTWOORDEN OP DE VRAGEN
+-
+-
+
+WAT IK DEZE WEEK TOEPAS (1 ding):
+
+VRAAG VOOR DE CALL VAN ZATERDAG:</pre>
+  </div>
+  <ul class="checks">
+    <li><input type="checkbox" id="j1"><label for="j1"><span class="t">Video 1 + 2 bekeken</span><span class="klaar"><b>Klaar als:</b> notities ingevuld.</span></label></li>
+    <li><input type="checkbox" id="j2"><label for="j2"><span class="t">Video 3 + 4 bekeken</span><span class="klaar"><b>Klaar als:</b> notities ingevuld.</span></label></li>
+    <li><input type="checkbox" id="j3"><label for="j3"><span class="t">Video 5 + 6 bekeken</span><span class="klaar"><b>Klaar als:</b> notities ingevuld.</span></label></li>
+    <li><input type="checkbox" id="j4"><label for="j4"><span class="t">Video 8 + 9 bekeken</span><span class="klaar"><b>Klaar als:</b> notities ingevuld.</span></label></li>
+    <li><input type="checkbox" id="j5"><label for="j5"><span class="t">Video 7 + 10 bekeken (na je eerste 3 demo's)</span><span class="klaar"><b>Klaar als:</b> notities ingevuld.</span></label></li>
+  </ul>
+</section>
+
+
+<section id="k">
+  <h2><span class="letter">K</span>Vaste afspraken</h2>
+  <div class="tablewrap"><table>
+    <tr><th>Wat</th><th>Wanneer</th></tr>
+    <tr><td>Call met het AS Media team (acquisitie, sales, websites)</td><td><b>Elke zaterdag 18:00</b> (vast)</td></tr>
+    <tr><td>Tweede call van de week</td><td>Elke week samen in te plannen</td></tr>
+    <tr><td>Avondrapport in RAY CONTENT</td><td>Elke avond</td></tr>
+    <tr><td>Video's die we sturen bekijken + notities</td><td>Voor de volgende call</td></tr>
+  </table></div>
+  <h3>Wat we van je verwachten</h3>
+  <ul class="checks">
+    <li><input type="checkbox" id="k1"><label for="k1"><span class="t">Elke dag 100 calls, alles in je CRM.</span><span class="klaar"><b>Klaar als:</b> je Sheet het bewijst.</span></label></li>
+    <li><input type="checkbox" id="k2"><label for="k2"><span class="t">Elke avond je cijfers in de groep, ook op slechte dagen.</span><span class="klaar"><b>Klaar als:</b> er geen avond zonder rapport is.</span></label></li>
+    <li><input type="checkbox" id="k3"><label for="k3"><span class="t">Op elke call aanwezig, met notities en vragen.</span><span class="klaar"><b>Klaar als:</b> je nooit "onvoorbereid" binnenkomt.</span></label></li>
+    <li><input type="checkbox" id="k4"><label for="k4"><span class="t">Vastgelopen? Meteen vragen in de groep, niet wachten tot zaterdag.</span><span class="klaar"><b>Klaar als:</b> je nooit langer dan een dag vastzit.</span></label></li>
+  </ul>
+</section>
+
+
+<section id="l">
+  <h2><span class="letter">L</span>FAQ</h2>
+  <details>
+    <summary>Waarom gratis werken? Ik wil toch geld verdienen?</summary>
+    <p>Omdat je nu nog geen bewijs hebt. Gratis is hier een investering: je krijgt testimonials, een klantenlijst en vertrouwen. Daarmee verkoop je straks betaald werk veel makkelijker.</p>
+  </details>
+  <details>
+    <summary>Ik ken niets van code. Lukt dit wel?</summary>
+    <p>Ja. Claude schrijft de code. Jij geeft de juiste info en checkt of het er goed uitziet op je gsm. De video's in J leggen de rest uit.</p>
+  </details>
+  <details>
+    <summary>Wat als de installateur zegt: "ik heb al een website"?</summary>
+    <p>Dat is normaal. Wacht op de gids van Victor (G) voor de juiste reactie. Noteer het bezwaar in je CRM, dan bespreken we het op de call.</p>
+  </details>
+  <details>
+    <summary>100 calls per dag met mijn shiften, hoe doe ik dat?</summary>
+    <p>Bel in de blokken dat je vrij bent en bedrijven opnemen. Gebruik het weekend vooral om lijsten te maken en sites te bouwen. Lukt 100 echt niet op een dag? Zeg het eerlijk in je avondrapport, dan zoeken we samen een oplossing.</p>
+  </details>
+  <details>
+    <summary>Wanneer mag ik ads draaien?</summary>
+    <p>Later, als je bewijs hebt en klanten goed kan opvolgen. Tot dan: spaar elke maand een vast bedrag voor ads. Wanneer we starten, beslissen we samen.</p>
+  </details>
+</section>
+
+<footer>
+  NETO Agency · Startbijbel opgesteld door het AS Media team · 17/11
+</footer>
+
+</div>
+
+<script>
+(function(){
+  var KEY='ray-startbijbel-17-11';
+  var state={};
+  try{ state=JSON.parse(localStorage.getItem(KEY)||'{}')||{}; }catch(e){ state={}; }
+  function save(){ try{ localStorage.setItem(KEY, JSON.stringify(state)); }catch(e){} }
+  var boxes=[].slice.call(document.querySelectorAll('ul.checks input[type=checkbox]'));
+  function paint(){
+    var done=0;
+    boxes.forEach(function(b){ var li=b.closest('li'); if(b.checked){done++; li.classList.add('done');} else li.classList.remove('done'); });
+    var pct=boxes.length?Math.round(done/boxes.length*100):0;
+    document.getElementById('fill').style.width=pct+'%';
+    document.getElementById('ptxt').textContent=done+' van '+boxes.length+' afgevinkt ('+pct+'%)';
+  }
+  boxes.forEach(function(b){
+    b.checked=!!state[b.id];
+    b.addEventListener('change',function(){ state[b.id]=b.checked; save(); paint(); });
+  });
+  paint();
+  document.getElementById('reset').addEventListener('click',function(){
+    if(!confirm('Alle vinkjes leegmaken?')) return;
+    state={}; save(); boxes.forEach(function(b){b.checked=false;}); paint();
+  });
+  [].slice.call(document.querySelectorAll('.copy')).forEach(function(btn){
+    btn.addEventListener('click',function(){
+      var txt=btn.parentNode.querySelector('pre').textContent;
+      function ok(){ btn.textContent='Gekopieerd'; btn.classList.add('ok'); setTimeout(function(){btn.textContent='Kopieer'; btn.classList.remove('ok');},1600); }
+      function fallback(){ var t=document.createElement('textarea'); t.value=txt; document.body.appendChild(t); t.select(); try{document.execCommand('copy'); ok();}catch(e){} document.body.removeChild(t); }
+      try{ navigator.clipboard.writeText(txt).then(ok,fallback); }catch(e){ fallback(); }
+    });
+  });
+})();
+</script>
+</body>
+</html>
